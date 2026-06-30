@@ -64,3 +64,16 @@ function getItemBySlug(slug) {
 function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
+
+// Load saved menu data from localStorage (admin panel changes)
+try {
+  const saved = localStorage.getItem('hannahs_menu_data');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    for (const cat in parsed) {
+      if (Array.isArray(parsed[cat])) {
+        menuData[cat] = parsed[cat];
+      }
+    }
+  }
+} catch(e) {}

@@ -56,19 +56,7 @@ nav .container { display: flex; align-items: center; justify-content: space-betw
 /* HERO */
 .hero {
   min-height: 100vh; display: flex; align-items: center;
-  background: linear-gradient(135deg, #1A1A2E 0%, #2D1B1B 50%, #1A1A2E 100%);
   position: relative; overflow: hidden;
-}
-.hero::before {
-  content: ''; position: absolute; inset:0;
-  background: url('https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=1600&q=80') center/cover no-repeat;
-  opacity: 0.12; pointer-events: none;
-  background-attachment: fixed;
-  transform: translateZ(0);
-}
-.hero-overlay {
-  position: absolute; inset:0;
-  background: radial-gradient(ellipse at 20% 50%, rgba(212,55,40,0.15) 0%, transparent 60%);
 }
 .hero .container { position: relative; z-index: 2; display: flex; align-items: center; padding-top: 80px; padding-bottom: 80px; }
 .hero-content { flex: 1; }
@@ -78,11 +66,11 @@ nav .container { display: flex; align-items: center; justify-content: space-betw
   letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
 }
 .hero h1 {
-  font-size: 3.8rem; line-height: 1.1; color: #fff; margin-bottom: 16px;
+  font-size: 3.8rem; line-height: 1.1; color: var(--dark); margin-bottom: 16px;
 }
-.hero h1 span { color: var(--gold); }
+.hero h1 span { color: var(--brand); }
 .hero p {
-  font-size: 1.1rem; color: rgba(255,255,255,0.7); max-width: 540px; margin-bottom: 32px;
+  font-size: 1.1rem; color: var(--text-light); max-width: 540px; margin-bottom: 32px;
   line-height: 1.8;
 }
 .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -92,12 +80,12 @@ nav .container { display: flex; align-items: center; justify-content: space-betw
 }
 .btn-primary { background: var(--brand); color: #fff; }
 .btn-primary:hover { background: var(--brand-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,55,40,0.3); }
-.btn-outline { border: 2px solid rgba(255,255,255,0.3); color: #fff; background: transparent; }
-.btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+.btn-outline { border: 2px solid var(--text); color: var(--text); background: transparent; }
+.btn-outline:hover { border-color: var(--brand); color: var(--brand); transform: translateY(-2px); }
 
 .hero-stats { display: flex; gap: 40px; margin-top: 40px; }
-.hero-stat h3 { font-size: 2rem; color: var(--gold); }
-.hero-stat p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 0; }
+.hero-stat h3 { font-size: 2rem; color: var(--brand); }
+.hero-stat p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0; }
 
 /* SECTION COMMON */
 section { padding: 100px 0; }
@@ -352,7 +340,6 @@ footer ul li a:hover { color: var(--gold); }
 </nav>
 
 <section class="hero" id="home">
-<div class="hero-overlay"></div>
 <div class="container">
 <div class="hero-content reveal-left">
 <div class="hero-badge"><i class="fas fa-crown"></i> Est. 1987 · 2nd Generation</div>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Hannah's Hot Pot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --brand: #D43728; --brand-dark: #A8281C; --gold: #E8A838; --cream: #FFF8F0;
+  --dark: #1A1A2E; --text: #2D2D44; --text-light: #6B6B80; --bg: #F0F2F5;
+  --card: #FFFFFF; --shadow: 0 2px 12px rgba(0,0,0,0.06); --radius: 12px;
+  --sidebar: 240px; --topbar: 60px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Lato', sans-serif; color: var(--text); background: var(--bg); font-size: 14px;
+}
+
+/* LOGIN */
+.login-screen {
+  display:flex; align-items:center; justify-content:center; min-height:100vh;
+  background: linear-gradient(135deg, var(--dark) 0%, #2D1B1B 100%);
+}
+.login-box {
+  background:#fff; border-radius:var(--radius); padding:40px; width:380px; max-width:90%;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+}
+.login-box h1 { font-size:1.4rem; margin-bottom:4px; color:var(--dark); }
+.login-box p { color:var(--text-light); margin-bottom:24px; font-size:0.85rem; }
+.login-box .logo { height:50px; margin-bottom:16px; }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:0.8rem; font-weight:600; margin-bottom:4px; color:var(--text); }
+.form-group input, .form-group select, .form-group textarea {
+  width:100%; padding:10px 14px; border:1.5px solid #E5E5E5; border-radius:8px;
+  font-family:'Lato',sans-serif; font-size:0.9rem; transition:border 0.2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color:var(--brand); outline:none;
+}
+.btn {
+  display:inline-flex; align-items:center; gap:6px; padding:10px 24px; border-radius:50px;
+  font-weight:600; font-size:0.85rem; cursor:pointer; border:none; transition:all 0.2s;
+  text-decoration:none; font-family:'Lato',sans-serif;
+}
+.btn-primary { background:var(--brand); color:#fff; }
+.btn-primary:hover { background:var(--brand-dark); }
+.btn-outline { border:1.5px solid #E5E5E5; background:transparent; color:var(--text); }
+.btn-outline:hover { border-color:var(--brand); color:var(--brand); }
+.btn-danger { background:#DC3545; color:#fff; }
+.btn-danger:hover { background:#B02D3A; }
+.btn-sm { padding:6px 14px; font-size:0.8rem; }
+.btn-block { width:100%; justify-content:center; }
+.btn-success { background:#28A745; color:#fff; }
+.btn-success:hover { background:#1E8A37; }
+
+/* APP LAYOUT */
+.app { display:none; }
+.app.active { display:flex; min-height:100vh; }
+
+/* SIDEBAR */
+.sidebar {
+  width:var(--sidebar); background:var(--dark); color:#fff;
+  display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:100;
+}
+.sidebar-brand {
+  padding:16px 20px; display:flex; align-items:center; gap:10px;
+  border-bottom:1px solid rgba(255,255,255,0.08); height:var(--topbar);
+}
+.sidebar-brand img { height:32px; border-radius:6px; }
+.sidebar-brand span { font-weight:700; font-style:italic; font-size:0.95rem; }
+.sidebar-nav { flex:1; padding:12px 0; overflow-y:auto; }
+.sidebar-nav a {
+  display:flex; align-items:center; gap:12px; padding:10px 20px;
+  color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.85rem;
+  transition:all 0.2s; border-left:3px solid transparent;
+}
+.sidebar-nav a:hover { color:#fff; background:rgba(255,255,255,0.05); }
+.sidebar-nav a.active { color:#fff; background:rgba(255,255,255,0.08); border-left-color:var(--gold); }
+.sidebar-nav a i { width:20px; text-align:center; }
+.sidebar-footer {
+  padding:12px 20px; border-top:1px solid rgba(255,255,255,0.08);
+  font-size:0.75rem; color:rgba(255,255,255,0.3);
+}
+
+/* MAIN */
+.main {
+  margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; min-height:100vh;
+}
+.topbar {
+  height:var(--topbar); background:var(--card); border-bottom:1px solid #E5E5E5;
+  display:flex; align-items:center; justify-content:space-between; padding:0 24px;
+  position:sticky; top:0; z-index:50;
+}
+.topbar h2 { font-size:1.1rem; font-weight:600; }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.topbar-actions .user-badge {
+  width:32px; height:32px; border-radius:50%; background:var(--brand);
+  display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:0.8rem;
+}
+.content { padding:24px; flex:1; }
+
+/* CARDS */
+.card {
+  background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:20px; margin-bottom:20px;
+}
+.card-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+}
+.card-header h3 { font-size:1rem; font-weight:600; }
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; }
+.stat-card {
+  background:var(--card); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow);
+  text-align:center;
+}
+.stat-card .stat-icon { font-size:1.8rem; color:var(--brand); margin-bottom:8px; }
+.stat-card .stat-value { font-size:1.8rem; font-weight:700; color:var(--dark); }
+.stat-card .stat-label { font-size:0.8rem; color:var(--text-light); margin-top:4px; }
+
+/* TABLE */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; }
+th, td { text-align:left; padding:10px 12px; border-bottom:1px solid #F0F0F0; font-size:0.85rem; }
+th { font-weight:600; color:var(--text-light); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; }
+tr:hover td { background:#FAFAFA; }
+.item-img-thumb { width:48px; height:36px; border-radius:6px; background-size:cover; background-position:center; display:inline-block; vertical-align:middle; }
+
+/* TABS */
+.admin-tabs { display:flex; gap:4px; margin-bottom:20px; flex-wrap:wrap; }
+.admin-tab {
+  padding:8px 18px; border-radius:50px; border:1px solid #E5E5E5;
+  background:transparent; font-size:0.8rem; font-weight:500; cursor:pointer;
+  transition:all 0.2s; color:var(--text-light); font-family:'Lato',sans-serif;
+}
+.admin-tab:hover { border-color:var(--brand); color:var(--brand); }
+.admin-tab.active { background:var(--brand); border-color:var(--brand); color:#fff; }
+
+/* MODAL */
+.modal-overlay {
+  position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.5);
+  display:none; align-items:center; justify-content:center; backdrop-filter:blur(4px);
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:#fff; border-radius:var(--radius); max-width:520px; width:90%;
+  padding:32px; position:relative; max-height:90vh; overflow-y:auto;
+}
+.modal-close {
+  position:absolute; top:16px; right:16px; background:none; border:none;
+  font-size:1.3rem; cursor:pointer; color:var(--text-light);
+}
+.modal h3 { font-size:1.2rem; margin-bottom:16px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+/* BADGE */
+.badge {
+  display:inline-block; padding:2px 10px; border-radius:50px; font-size:0.7rem;
+  font-weight:600; text-transform:uppercase;
+}
+.badge-pending { background:#FFF3CD; color:#856404; }
+.badge-preparing { background:#CCE5FF; color:#004085; }
+.badge-ready { background:#D4EDDA; color:#155724; }
+.badge-delivered { background:#E2E3E5; color:#383D41; }
+
+.empty-state { text-align:center; padding:40px 20px; color:var(--text-light); }
+.empty-state i { font-size:2.5rem; margin-bottom:12px; opacity:0.3; }
+.empty-state p { font-size:0.9rem; }
+
+@media (max-width:768px) {
+  .sidebar { width:60px; }
+  .sidebar-brand span { display:none; }
+  .sidebar-nav a span { display:none; }
+  .sidebar-nav a { justify-content:center; padding:12px; }
+  .main { margin-left:60px; }
+  .form-row { grid-template-columns:1fr; }
+  .stat-grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <img src="LOGO.png" alt="Hannah's Hot Pot" class="logo">
+    <h1>Admin Login</h1>
+    <p>Enter your password to manage the kitchen.</p>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn btn-primary btn-block" onclick="doLogin()"><i class="fas fa-lock-open"></i> Sign In</button>
+    <p id="loginError" style="color:var(--brand);font-size:0.8rem;margin-top:12px;display:none;"></p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <img src="LOGO.png" alt="HK"><span>Hannah's Kitchen</span>
+    </div>
+    <div class="sidebar-nav">
+      <a href="#" class="active" data-page="dashboard"><i class="fas fa-chart-simple"></i><span>Dashboard</span></a>
+      <a href="#" data-page="menu"><i class="fas fa-utensils"></i><span>Menu</span></a>
+      <a href="#" data-page="orders"><i class="fas fa-clipboard-list"></i><span>Orders</span></a>
+      <a href="#" data-page="settings"><i class="fas fa-cog"></i><span>Settings</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <a href="#" onclick="logout()" style="color:rgba(255,255,255,0.4);text-decoration:none;font-size:0.8rem;"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <h2 id="pageTitle">Dashboard</h2>
+      <div class="topbar-actions">
+        <span style="font-size:0.8rem;color:var(--text-light);" id="clock"></span>
+        <div class="user-badge">A</div>
+      </div>
+    </div>
+
+    <div class="content" id="pageContent">
+      <!-- loaded dynamically -->
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="menu-data.js"></script>
+<script>
+// ===== AUTH =====
+const ADMIN_PASS_KEY = 'hannahs_admin_pass';
+
+function getAdminPass() {
+  let p = localStorage.getItem(ADMIN_PASS_KEY);
+  if (!p) {
+    p = btoa('admin123');
+    localStorage.setItem(ADMIN_PASS_KEY, p);
+  }
+  return atob(p);
+}
+
+function doLogin() {
+  const pass = document.getElementById('loginPass').value;
+  if (pass === getAdminPass()) {
+    localStorage.setItem('hannahs_admin_logged', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('active');
+    initApp();
+  } else {
+    const err = document.getElementById('loginError');
+    err.textContent = 'Wrong password. Try again.';
+    err.style.display = 'block';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('hannahs_admin_logged');
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('app').classList.remove('active');
+}
+
+// Check login on load
+if (localStorage.getItem('hannahs_admin_logged') === '1') {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').classList.add('active');
+}
+
+// ===== DATA LAYER =====
+const STORAGE_KEY = 'hannahs_menu_data';
+const ORDERS_KEY = 'hannahs_orders';
+const SETTINGS_KEY = 'hannahs_settings';
+
+function getMenuData() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try { return JSON.parse(saved); } catch(e) {}
+  }
+  return JSON.parse(JSON.stringify(menuData));
+}
+
+function saveMenuData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function getOrders() {
+  const saved = localStorage.getItem(ORDERS_KEY);
+  return saved ? JSON.parse(saved) : [];
+}
+
+function saveOrders(orders) {
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+}
+
+function getSettings() {
+  const def = { waNumber: '2348160894006', siteTitle: "Hannah's Hot Pot", storeHours: 'Mon – Sat: 8AM – 9PM\nSunday: 10AM – 6PM' };
+  const saved = localStorage.getItem(SETTINGS_KEY);
+  return saved ? Object.assign(def, JSON.parse(saved)) : def;
+}
+
+function saveSettings(s) {
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+}
+
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+const categoryLabels = {
+  flagship: 'Flagship Soups', swallow: 'Swallow 2.0', pepper: 'Pepper Soup',
+  proteins: 'Proteins', rice: 'Rice Meals', calabar: 'Calabar Specials'
+};
+
+// ===== APP INIT =====
+let currentPage = 'dashboard';
+
+function initApp() {
+  navigate('dashboard');
+  document.querySelectorAll('.sidebar-nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      navigate(a.dataset.page);
+    });
+  });
+  updateClock();
+  setInterval(updateClock, 60000);
+}
+
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toLocaleString();
+}
+
+function navigate(page) {
+  currentPage = page;
+  document.querySelectorAll('.sidebar-nav a').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === page);
+  });
+  document.getElementById('pageTitle').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+  switch (page) {
+    case 'dashboard': renderDashboard(); break;
+    case 'menu': renderMenuPage(); break;
+    case 'orders': renderOrdersPage(); break;
+    case 'settings': renderSettingsPage(); break;
+  }
+}
+
+// ===== DASHBOARD =====
+function renderDashboard() {
+  const data = getMenuData();
+  let totalItems = 0, catCount = 0;
+  for (const cat in data) { totalItems += data[cat].length; catCount++; }
+  const orders = getOrders();
+  const pendingOrders = orders.filter(o => o.status !== 'delivered' && o.status !== 'cancelled').length;
+
+  document.getElementById('pageContent').innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-icon"><i class="fas fa-utensils"></i></div><div class="stat-value">${totalItems}</div><div class="stat-label">Menu Items</div></div>
+      <div class="stat-card"><div class="stat-icon"><i class="fas fa-tags"></i></div><div class="stat-value">${catCount}</div><div class="stat-label">Categories</div></div>
+      <div class="stat-card"><div class="stat-icon"><i class="fas fa-spinner"></i></div><div class="stat-value">${pendingOrders}</div><div class="stat-label">Active Orders</div></div>
+      <div class="stat-card"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-value">${orders.length}</div><div class="stat-label">Total Orders</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-clock"></i> Recent Orders</h3></div>
+      ${orders.length === 0 ? '<div class="empty-state"><i class="fas fa-inbox"></i><p>No orders yet</p></div>' : `
+      <div class="table-wrap"><table>
+        <thead><tr><th>Customer</th><th>Items</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>${orders.slice(-5).reverse().map(o => `
+          <tr><td>${o.customer}</td><td>${o.items}</td><td>${o.amount}</td><td><span class="badge badge-${o.status}">${o.status}</span></td><td>${new Date(o.date).toLocaleDateString()}</td></tr>
+        `).join('')}</tbody>
+      </table></div>`}
+    </div>
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Menu by Category</h3></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Category</th><th>Items</th></tr></thead>
+        <tbody>${Object.entries(categoryLabels).map(([key, label]) => `
+          <tr><td>${label}</td><td>${(data[key] || []).length}</td></tr>
+        `).join('')}</tbody>
+      </table></div>
+    </div>
+  `;
+}
+
+// ===== MENU MANAGEMENT =====
+let menuCategoryFilter = 'flagship';
+
+function renderMenuPage() {
+  const data = getMenuData();
+  document.getElementById('pageContent').innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fas fa-utensils"></i> Menu Items</h3>
+        <button class="btn btn-primary btn-sm" onclick="openAddItem()"><i class="fas fa-plus"></i> Add Item</button>
+      </div>
+      <div class="admin-tabs" id="menuCatTabs">
+        ${Object.entries(categoryLabels).map(([key, label]) =>
+          `<button class="admin-tab ${key === menuCategoryFilter ? 'active' : ''}" data-cat="${key}" onclick="switchMenuCat('${key}')">${label}</button>`
+        ).join('')}
+      </div>
+      <div class="table-wrap" id="menuTableWrap"></div>
+    </div>
+  `;
+  renderMenuTable();
+}
+
+function switchMenuCat(cat) {
+  menuCategoryFilter = cat;
+  document.querySelectorAll('#menuCatTabs .admin-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+  renderMenuTable();
+}
+
+function renderMenuTable() {
+  const data = getMenuData();
+  const items = data[menuCategoryFilter] || [];
+  const wrap = document.getElementById('menuTableWrap');
+  if (items.length === 0) {
+    wrap.innerHTML = '<div class="empty-state"><i class="fas fa-empty-set"></i><p>No items in this category</p></div>';
+    return;
+  }
+  wrap.innerHTML = `<table>
+    <thead><tr><th>Image</th><th>Name</th><th>Price</th><th>Tag</th><th style="width:120px">Actions</th></tr></thead>
+    <tbody>${items.map((item, idx) => `
+      <tr>
+        <td><span class="item-img-thumb" style="background-image:url('${item.img}')"></span></td>
+        <td><strong>${item.name}</strong><br><span style="font-size:0.75rem;color:var(--text-light)">${item.desc.substring(0, 60)}…</span></td>
+        <td>${item.price}</td>
+        <td><span class="badge" style="background:var(--brand);color:#fff">${item.tag}</span></td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="openEditItem('${menuCategoryFilter}', ${idx})"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem('${menuCategoryFilter}', ${idx})"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>
+    `).join('')}</tbody>
+  </table>`;
+}
+
+function openAddItem() {
+  document.getElementById('modalBody').innerHTML = `
+    <h3><i class="fas fa-plus"></i> Add Menu Item</h3>
+    <form onsubmit="addItem(event)">
+      <div class="form-group"><label>Name</label><input id="fName" required></div>
+      <div class="form-group"><label>Description</label><textarea id="fDesc" rows="2" required></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Price</label><input id="fPrice" required placeholder="₦3,800"></div>
+        <div class="form-group"><label>Tag</label><input id="fTag" required placeholder="Classic"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Image path</label><input id="fImg" required value="calabar foods and their names - Google Search/"></div>
+        <div class="form-group"><label>Category</label><select id="fCat">${Object.entries(categoryLabels).map(([k,v]) => `<option value="${k}" ${k === menuCategoryFilter ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-save"></i> Add Item</button>
+    </form>
+  `;
+  openModal();
+}
+
+function addItem(e) {
+  e.preventDefault();
+  const data = getMenuData();
+  const cat = document.getElementById('fCat').value;
+  if (!data[cat]) data[cat] = [];
+  data[cat].push({
+    name: document.getElementById('fName').value,
+    desc: document.getElementById('fDesc').value,
+    price: document.getElementById('fPrice').value,
+    tag: document.getElementById('fTag').value,
+    img: document.getElementById('fImg').value
+  });
+  saveMenuData(data);
+  closeModal();
+  renderMenuPage();
+}
+
+function openEditItem(category, idx) {
+  const data = getMenuData();
+  const item = data[category][idx];
+  document.getElementById('modalBody').innerHTML = `
+    <h3><i class="fas fa-edit"></i> Edit Item</h3>
+    <form onsubmit="editItem(event, '${category}', ${idx})">
+      <div class="form-group"><label>Name</label><input id="fName" value="${item.name.replace(/"/g,'&quot;')}" required></div>
+      <div class="form-group"><label>Description</label><textarea id="fDesc" rows="2" required>${item.desc}</textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Price</label><input id="fPrice" value="${item.price}" required></div>
+        <div class="form-group"><label>Tag</label><input id="fTag" value="${item.tag}" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Image path</label><input id="fImg" value="${item.img}" required></div>
+        <div class="form-group"><label>Category</label><select id="fCat">${Object.entries(categoryLabels).map(([k,v]) => `<option value="${k}" ${k === category ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-save"></i> Update Item</button>
+    </form>
+  `;
+  openModal();
+}
+
+function editItem(e, category, idx) {
+  e.preventDefault();
+  const data = getMenuData();
+  const newCat = document.getElementById('fCat').value;
+  const updated = {
+    name: document.getElementById('fName').value,
+    desc: document.getElementById('fDesc').value,
+    price: document.getElementById('fPrice').value,
+    tag: document.getElementById('fTag').value,
+    img: document.getElementById('fImg').value
+  };
+  if (newCat === category) {
+    data[category][idx] = updated;
+  } else {
+    data[category].splice(idx, 1);
+    if (!data[newCat]) data[newCat] = [];
+    data[newCat].push(updated);
+  }
+  saveMenuData(data);
+  closeModal();
+  menuCategoryFilter = newCat;
+  renderMenuPage();
+}
+
+function deleteItem(category, idx) {
+  if (!confirm('Delete this item?')) return;
+  const data = getMenuData();
+  data[category].splice(idx, 1);
+  saveMenuData(data);
+  renderMenuTable();
+}
+
+// ===== ORDERS =====
+function renderOrdersPage() {
+  const orders = getOrders();
+  document.getElementById('pageContent').innerHTML = `
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-clipboard-list"></i> Order Management</h3><button class="btn btn-primary btn-sm" onclick="openAddOrder()"><i class="fas fa-plus"></i> New Order</button></div>
+      ${orders.length === 0 ? '<div class="empty-state"><i class="fas fa-inbox"></i><p>No orders recorded yet</p></div>' : `
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Customer</th><th>Items</th><th>Amount</th><th>Date</th><th>Status</th><th style="width:140px">Actions</th></tr></thead>
+        <tbody>${orders.map((o, i) => `
+          <tr>
+            <td>${i + 1}</td>
+            <td><strong>${o.customer}</strong>${o.phone ? '<br><span style="font-size:0.75rem;color:var(--text-light)">'+o.phone+'</span>' : ''}</td>
+            <td>${o.items}</td>
+            <td>${o.amount}</td>
+            <td>${new Date(o.date).toLocaleDateString()}</td>
+            <td><span class="badge badge-${o.status}">${o.status}</span></td>
+            <td>
+              <select onchange="updateOrderStatus(${i}, this.value)" style="padding:4px 8px;border-radius:6px;border:1px solid #E5E5E5;font-size:0.75rem;">
+                <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
+                <option value="preparing" ${o.status==='preparing'?'selected':''}>Preparing</option>
+                <option value="ready" ${o.status==='ready'?'selected':''}>Ready</option>
+                <option value="delivered" ${o.status==='delivered'?'selected':''}>Delivered</option>
+                <option value="cancelled" ${o.status==='cancelled'?'selected':''}>Cancelled</option>
+              </select>
+              <button class="btn btn-danger btn-sm" onclick="deleteOrder(${i})" style="margin-left:4px"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+        `).join('')}</tbody>
+      </table></div>`}
+    </div>
+  `;
+}
+
+function openAddOrder() {
+  document.getElementById('modalBody').innerHTML = `
+    <h3><i class="fas fa-plus"></i> New Order</h3>
+    <form onsubmit="addOrder(event)">
+      <div class="form-row">
+        <div class="form-group"><label>Customer Name</label><input id="oCustomer" required></div>
+        <div class="form-group"><label>Phone</label><input id="oPhone" placeholder="+234 800 000 0000"></div>
+      </div>
+      <div class="form-group"><label>Items Ordered</label><textarea id="oItems" rows="2" required placeholder="Edikang Ikong x2, Pounded Yam x3"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Amount</label><input id="oAmount" required placeholder="₦12,400"></div>
+        <div class="form-group"><label>Status</label><select id="oStatus">
+          <option value="pending">Pending</option>
+          <option value="preparing">Preparing</option>
+          <option value="ready">Ready</option>
+          <option value="delivered">Delivered</option>
+        </select></div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-save"></i> Add Order</button>
+    </form>
+  `;
+  openModal();
+}
+
+function addOrder(e) {
+  e.preventDefault();
+  const orders = getOrders();
+  orders.push({
+    customer: document.getElementById('oCustomer').value,
+    phone: document.getElementById('oPhone').value,
+    items: document.getElementById('oItems').value,
+    amount: document.getElementById('oAmount').value,
+    status: document.getElementById('oStatus').value,
+    date: new Date().toISOString()
+  });
+  saveOrders(orders);
+  closeModal();
+  renderOrdersPage();
+}
+
+function updateOrderStatus(idx, status) {
+  const orders = getOrders();
+  orders[idx].status = status;
+  saveOrders(orders);
+}
+
+function deleteOrder(idx) {
+  if (!confirm('Delete this order?')) return;
+  const orders = getOrders();
+  orders.splice(idx, 1);
+  saveOrders(orders);
+  renderOrdersPage();
+}
+
+// ===== SETTINGS =====
+function renderSettingsPage() {
+  const s = getSettings();
+  document.getElementById('pageContent').innerHTML = `
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-cog"></i> General Settings</h3></div>
+      <form onsubmit="saveSettingsForm(event)" style="max-width:500px">
+        <div class="form-group"><label>WhatsApp Number</label><input id="sWa" value="${s.waNumber}"><span style="font-size:0.75rem;color:var(--text-light);">Without + or spaces, e.g. 2348160894006</span></div>
+        <div class="form-group"><label>Site Title</label><input id="sTitle" value="${s.siteTitle}"></div>
+        <div class="form-group"><label>Store Hours</label><textarea id="sHours" rows="3">${s.storeHours}</textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Settings</button>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-key"></i> Change Password</h3></div>
+      <form onsubmit="changePass(event)" style="max-width:500px">
+        <div class="form-group"><label>Current Password</label><input type="password" id="oldPass" required></div>
+        <div class="form-group"><label>New Password</label><input type="password" id="newPass" required></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-key"></i> Update Password</button>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-download"></i> Export Data</h3></div>
+      <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:16px;">Download or copy the generated <code>menu-data.js</code> to deploy menu changes permanently.</p>
+      <button class="btn btn-primary" onclick="exportMenuData()"><i class="fas fa-download"></i> Download menu-data.js</button>
+    </div>
+  `;
+}
+
+function saveSettingsForm(e) {
+  e.preventDefault();
+  saveSettings({
+    waNumber: document.getElementById('sWa').value,
+    siteTitle: document.getElementById('sTitle').value,
+    storeHours: document.getElementById('sHours').value
+  });
+  alert('Settings saved!');
+}
+
+function changePass(e) {
+  e.preventDefault();
+  const old = document.getElementById('oldPass').value;
+  const newP = document.getElementById('newPass').value;
+  if (old !== getAdminPass()) { alert('Current password is wrong.'); return; }
+  if (newP.length < 4) { alert('New password must be at least 4 characters.'); return; }
+  localStorage.setItem(ADMIN_PASS_KEY, btoa(newP));
+  alert('Password changed!');
+  document.getElementById('oldPass').value = '';
+  document.getElementById('newPass').value = '';
+}
+
+function exportMenuData() {
+  const data = getMenuData();
+  const imgPath = "calabar foods and their names - Google Search/";
+  let js = `const imgPath = "${imgPath}";\nconst menuData = ${JSON.stringify(data, null, 2)};\n\nfunction getItemBySlug(slug) {\n  for (const cat in menuData) {\n    for (const item of menuData[cat]) {\n      const itemSlug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-\$/g, '');\n      if (itemSlug === slug) return item;\n    }\n  }\n  return null;\n}\n\nfunction slugify(name) {\n  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-\$/g, '');\n}\n`;
+  const blob = new Blob([js], { type: 'application/javascript' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'menu-data.js';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ===== MODAL =====
+function openModal() { document.getElementById('modalOverlay').classList.add('open'); }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// ===== INIT ON LOAD =====
+if (document.getElementById('app').classList.contains('active')) {
+  initApp();
+}
+</script>
+</body>
+</html>
