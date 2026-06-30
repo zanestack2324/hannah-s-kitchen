@@ -56,7 +56,19 @@ nav .container { display: flex; align-items: center; justify-content: space-betw
 /* HERO */
 .hero {
   min-height: 100vh; display: flex; align-items: center;
+  background: linear-gradient(135deg, #1A1A2E 0%, #2D1B1B 50%, #1A1A2E 100%);
   position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset:0;
+  background: url('https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=1600&q=100') center/cover no-repeat;
+  opacity: 0.25; pointer-events: none;
+  background-attachment: fixed;
+  transform: translateZ(0);
+}
+.hero-overlay {
+  position: absolute; inset:0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(212,55,40,0.1) 0%, transparent 60%);
 }
 .hero .container { position: relative; z-index: 2; display: flex; align-items: center; padding-top: 80px; padding-bottom: 80px; }
 .hero-content { flex: 1; }
@@ -66,11 +78,11 @@ nav .container { display: flex; align-items: center; justify-content: space-betw
   letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
 }
 .hero h1 {
-  font-size: 3.8rem; line-height: 1.1; color: var(--dark); margin-bottom: 16px;
+  font-size: 3.8rem; line-height: 1.1; color: #fff; margin-bottom: 16px;
 }
-.hero h1 span { color: var(--brand); }
+.hero h1 span { color: var(--gold); }
 .hero p {
-  font-size: 1.1rem; color: var(--text-light); max-width: 540px; margin-bottom: 32px;
+  font-size: 1.1rem; color: rgba(255,255,255,0.7); max-width: 540px; margin-bottom: 32px;
   line-height: 1.8;
 }
 .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -80,12 +92,12 @@ nav .container { display: flex; align-items: center; justify-content: space-betw
 }
 .btn-primary { background: var(--brand); color: #fff; }
 .btn-primary:hover { background: var(--brand-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,55,40,0.3); }
-.btn-outline { border: 2px solid var(--text); color: var(--text); background: transparent; }
-.btn-outline:hover { border-color: var(--brand); color: var(--brand); transform: translateY(-2px); }
+.btn-outline { border: 2px solid rgba(255,255,255,0.3); color: #fff; background: transparent; }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
 
 .hero-stats { display: flex; gap: 40px; margin-top: 40px; }
-.hero-stat h3 { font-size: 2rem; color: var(--brand); }
-.hero-stat p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0; }
+.hero-stat h3 { font-size: 2rem; color: var(--gold); }
+.hero-stat p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 0; }
 
 /* SECTION COMMON */
 section { padding: 100px 0; }
@@ -108,13 +120,32 @@ section { padding: 100px 0; }
 .legacy-image::before {
   content: '1987'; position: absolute; top: -20px; left: -20px;
   font-family: 'Lato', sans-serif; font-size: 6rem; font-weight: 900;
-  color: rgba(212,55,40,0.08); line-height: 1;
+  color: rgba(212,55,40,0.08); line-height: 1; z-index: 2;
 }
 .legacy-badge {
   position: absolute; bottom: -16px; right: -16px;
   background: var(--brand); color: #fff; padding: 12px 24px; border-radius: 12px;
-  font-weight: 600; font-size: 0.85rem;
+  font-weight: 600; font-size: 0.85rem; z-index: 2;
 }
+
+/* Collage */
+.collage {
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr);
+  gap: 6px; aspect-ratio: 1; position: relative;
+}
+.collage-item {
+  border-radius: 10px; overflow: hidden; position: relative;
+  background-size: cover; background-position: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease;
+}
+.collage-item:hover { transform: scale(1.04); z-index: 2; }
+.collage-item:nth-child(1) { grid-area: 1 / 1 / 3 / 3; }
+.collage-item:nth-child(2) { grid-area: 1 / 3 / 2 / 5; }
+.collage-item:nth-child(3) { grid-area: 2 / 3 / 3 / 5; }
+.collage-item:nth-child(4) { grid-area: 3 / 1 / 5 / 3; }
+.collage-item:nth-child(5) { grid-area: 3 / 3 / 5 / 4; }
+.collage-item:nth-child(6) { grid-area: 3 / 4 / 5 / 5; }
 .slogan-list { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
 .slogan-item { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; color: var(--text); }
 .slogan-item i { color: var(--gold); font-size: 0.8rem; }
@@ -237,18 +268,224 @@ footer ul li a:hover { color: var(--gold); }
 }
 .social-links a:hover { background: var(--brand); color: #fff; }
 
-/* SCROLL ANIMATIONS */
+/* SCROLL ANIMATIONS — overlapping reveal system */
 .reveal {
   opacity: 0; transform: translateY(50px);
-  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-left { opacity: 0; transform: translateX(-60px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-left { opacity: 0; transform: translateX(-80px); transition: opacity 0.8s ease, transform 0.8s ease; }
 .reveal-left.visible { opacity: 1; transform: translateX(0); }
-.reveal-right { opacity: 0; transform: translateX(60px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-right { opacity: 0; transform: translateX(80px); transition: opacity 0.8s ease, transform 0.8s ease; }
 .reveal-right.visible { opacity: 1; transform: translateX(0); }
-.reveal-scale { opacity: 0; transform: scale(0.9); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-up { opacity: 0; transform: translateY(60px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-up.visible { opacity: 1; transform: translateY(0); }
+.reveal-down { opacity: 0; transform: translateY(-60px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-down.visible { opacity: 1; transform: translateY(0); }
+.reveal-scale { opacity: 0; transform: scale(0.85); transition: opacity 0.8s ease, transform 0.8s ease; }
 .reveal-scale.visible { opacity: 1; transform: scale(1); }
+.reveal-rotate { opacity: 0; transform: perspective(600px) rotateX(15deg) translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-rotate.visible { opacity: 1; transform: perspective(600px) rotateX(0) translateY(0); }
+
+/* Stagger children — overlapping cascade */
+.reveal-stagger > * {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal-stagger.visible > * {
+  opacity: 1; transform: translateY(0);
+}
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.1s; }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.2s; }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.3s; }
+.reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.4s; }
+.reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.5s; }
+.reveal-stagger.visible > *:nth-child(7) { transition-delay: 0.6s; }
+.reveal-stagger.visible > *:nth-child(8) { transition-delay: 0.7s; }
+
+/* Section overlap — create depth */
+.section-overlap { margin-top: -80px; position: relative; z-index: 2; }
+.section-overlap-next { position: relative; z-index: 1; padding-top: 100px !important; }
+
+/* SEARCH BAR */
+.menu-search-wrapper {
+  position: relative; max-width: 400px; margin: -24px auto 40px;
+}
+.menu-search-wrapper i {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  color: var(--text-light); font-size: 0.9rem;
+}
+.menu-search-wrapper input {
+  width: 100%; padding: 12px 16px 12px 44px; border: 1.5px solid #E5E5E5;
+  border-radius: 50px; font-family: 'Lato', sans-serif; font-size: 0.9rem;
+  transition: border 0.2s; background: var(--cream);
+}
+.menu-search-wrapper input:focus { border-color: var(--brand); outline: none; }
+
+/* ENHANCED HOW-TO-ORDER */
+.step-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: rgba(232,168,56,0.12); color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px; font-size: 1.3rem;
+}
+.step-time {
+  display: inline-block; font-size: 0.7rem; color: var(--gold);
+  background: rgba(232,168,56,0.1); padding: 3px 12px;
+  border-radius: 50px; margin-top: 6px;
+}
+.step p { margin-bottom: 0; }
+
+/* FAQ SECTION */
+.faq-section { background: var(--cream); }
+.faq-list { text-align: left; }
+.faq-item {
+  background: #fff; border-radius: 12px; margin-bottom: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden;
+}
+.faq-question {
+  padding: 18px 24px; font-weight: 600; font-size: 0.95rem;
+  cursor: pointer; display: flex; justify-content: space-between;
+  align-items: center; color: var(--dark); transition: color 0.2s;
+  user-select: none;
+}
+.faq-question:hover { color: var(--brand); }
+.faq-question i { font-size: 0.8rem; transition: transform 0.3s; color: var(--text-light); }
+.faq-item.open .faq-question i { transform: rotate(180deg); color: var(--brand); }
+.faq-answer {
+  max-height: 0; padding: 0 24px; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+.faq-item.open .faq-answer {
+  max-height: 300px; padding: 0 24px 18px;
+}
+.faq-answer p { font-size: 0.9rem; color: var(--text-light); line-height: 1.7; }
+
+/* MAPS SECTION */
+.maps-section { background: #fff; }
+.maps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.map-container {
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+  position: relative; padding-bottom: 56.25%; height: 0;
+}
+.map-container iframe {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  border: 0;
+}
+.contact-details { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+.contact-detail-item {
+  display: flex; align-items: center; gap: 14px; font-size: 0.9rem;
+}
+.contact-detail-item i {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(212,55,40,0.08); display: flex;
+  align-items: center; justify-content: center; color: var(--brand); font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* CART SIDEBAR */
+.cart-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 2000; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s; backdrop-filter: blur(4px);
+}
+.cart-overlay.open { opacity: 1; pointer-events: auto; }
+.cart-sidebar {
+  position: fixed; top: 0; right: -400px; width: 400px; max-width: 90vw;
+  height: 100vh; background: #fff; z-index: 2001;
+  display: flex; flex-direction: column;
+  transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.1);
+}
+.cart-sidebar.open { right: 0; }
+.cart-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 24px; border-bottom: 1px solid #eee;
+}
+.cart-header h3 { font-style: italic; font-size: 1.2rem; }
+.cart-close {
+  background: none; border: none; font-size: 1.3rem;
+  cursor: pointer; color: var(--text-light); padding: 4px;
+}
+.cart-items {
+  flex: 1; overflow-y: auto; padding: 16px 24px;
+}
+.cart-empty {
+  text-align: center; color: var(--text-light); font-size: 0.9rem;
+  padding: 40px 0;
+}
+.cart-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid #f5f5f5;
+}
+.cart-item-img {
+  width: 50px; height: 50px; border-radius: 8px; flex-shrink: 0;
+  background-size: cover; background-position: center;
+}
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-info h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+.cart-item-controls {
+  display: flex; align-items: center; gap: 8px;
+}
+.cart-item-controls button {
+  width: 26px; height: 26px; border-radius: 50%; border: 1px solid #ddd;
+  background: none; cursor: pointer; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.cart-item-controls button:hover { border-color: var(--brand); color: var(--brand); }
+.cart-item-controls span { font-size: 0.85rem; font-weight: 600; min-width: 16px; text-align: center; }
+.cart-item-price { font-weight: 700; color: var(--brand); font-size: 0.85rem; white-space: nowrap; }
+.cart-item-remove {
+  background: none; border: none; color: #ccc; cursor: pointer;
+  font-size: 0.8rem; padding: 4px; transition: color 0.2s;
+}
+.cart-item-remove:hover { color: var(--brand); }
+.cart-footer {
+  padding: 20px 24px; border-top: 1px solid #eee;
+}
+.cart-total {
+  display: flex; justify-content: space-between; align-items: center;
+  font-weight: 700; font-size: 1.1rem; margin-bottom: 16px;
+}
+.cart-total span:last-child { color: var(--brand); font-size: 1.3rem; }
+
+/* CART FLOAT BUTTON */
+.cart-float {
+  position: fixed; bottom: 156px; right: 24px; z-index: 999;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--dark); color: #fff; border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  cursor: pointer; transition: all 0.3s;
+}
+.cart-float:hover { transform: scale(1.1); background: var(--brand); }
+.cart-badge {
+  position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px;
+  border-radius: 50%; background: var(--brand); color: #fff;
+  font-size: 0.65rem; font-weight: 700; display: none;
+  align-items: center; justify-content: center; padding: 0 4px;
+}
+
+/* ENHANCED FOOTER */
+.footer-brand p { margin-bottom: 16px; }
+.footer-newsletter { margin-top: 16px; }
+.footer-newsletter h5 { color: #fff; font-size: 0.9rem; margin-bottom: 8px; }
+.newsletter-form { display: flex; gap: 8px; }
+.newsletter-form input {
+  flex: 1; padding: 10px 14px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
+  color: #fff; font-family: 'Lato', sans-serif; font-size: 0.85rem;
+}
+.newsletter-form input::placeholder { color: rgba(255,255,255,0.3); }
+.newsletter-form input:focus { outline: none; border-color: var(--gold); }
+.newsletter-form button {
+  background: var(--gold); color: var(--dark); border: none;
+  padding: 10px 16px; border-radius: 8px; cursor: pointer;
+  font-weight: 600; font-size: 0.85rem; transition: background 0.2s;
+}
+.newsletter-form button:hover { background: #d49530; }
 
 /* PARALLAX SECTIONS */
 .parallax-section { position: relative; overflow: hidden; }
@@ -311,6 +548,8 @@ footer ul li a:hover { color: var(--gold); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .package-grid { grid-template-columns: 1fr; }
   .menu-grid { grid-template-columns: 1fr; }
+  .maps-grid { grid-template-columns: 1fr; }
+  .cart-sidebar { width: 100%; max-width: 100vw; right: -100vw; }
 }
 
 @media (max-width: 480px) {
@@ -340,6 +579,7 @@ footer ul li a:hover { color: var(--gold); }
 </nav>
 
 <section class="hero" id="home">
+<div class="hero-overlay"></div>
 <div class="container">
 <div class="hero-content reveal-left">
 <div class="hero-badge"><i class="fas fa-crown"></i> Est. 1987 · 2nd Generation</div>
@@ -358,11 +598,11 @@ footer ul li a:hover { color: var(--gold); }
 </div>
 </section>
 
-<section class="legacy" id="legacy">
+<section class="legacy section-overlap-next" id="legacy">
 <div class="container">
 <div class="legacy-grid">
 <div class="legacy-image reveal-left">
-<img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&q=80" alt="Mummy Hannah's Kitchen">
+<div class="collage" id="foodCollage"></div>
 <div class="legacy-badge"><i class="fas fa-heart"></i> Legacy Since 1987</div>
 </div>
 <div class="reveal-right">
@@ -370,7 +610,7 @@ footer ul li a:hover { color: var(--gold); }
 <h2 class="section-title">Akwa Ibom Roots. <br>Global Taste.</h2>
 <p class="section-desc" style="margin-bottom:20px">Hannah's Hot Spot has fed Festac since 1987. Known for authentic Akwa Ibom flavors, clean cooking, and generous portions. Hannah's Hot Pot is the online evolution — same recipes, same love from Mummy Hannah, now delivered to your home, office, and events across Lagos + beyond.</p>
 <p style="color:var(--text-light); margin-bottom:20px;"><strong>Nigeria's first 2nd-generation cloud kitchen.</strong> Heritage recipes, modern delivery.</p>
-<div class="slogan-list">
+<div class="slogan-list reveal-stagger">
 <div class="slogan-item"><i class="fas fa-check-circle"></i> Homemade. Rich. Healthy. Nigerian.</div>
 <div class="slogan-item"><i class="fas fa-check-circle"></i> We make the best Edikang Ikong in the world</div>
 <div class="slogan-item"><i class="fas fa-check-circle"></i> Legacy in every bite. Innovation in every bowl.</div>
@@ -381,7 +621,7 @@ footer ul li a:hover { color: var(--gold); }
 </div>
 </section>
 
-<section class="menu-section" id="menu">
+<section class="menu-section section-overlap" id="menu">
 <div class="container text-center reveal">
 <span class="section-label">Our Menu</span>
 <h2 class="section-title">From Mummy's Pot to Your Plate</h2>
@@ -396,7 +636,13 @@ footer ul li a:hover { color: var(--gold); }
 </div>
 </div>
 <div class="container">
-<div class="menu-grid" id="menuGrid"></div>
+<div class="menu-search-wrapper">
+<i class="fas fa-search"></i>
+<input type="text" id="menuSearch" placeholder="Search menu items...">
+</div>
+</div>
+<div class="container">
+<div class="menu-grid reveal-stagger" id="menuGrid"></div>
 </div>
 </section>
 
@@ -407,8 +653,8 @@ footer ul li a:hover { color: var(--gold); }
 <p class="section-desc">Different bowls. Bigger value. Less stress. Feeds more people.</p>
 </div>
 <div class="container">
-<div class="package-grid">
-<div class="package-card reveal">
+<div class="package-grid reveal-stagger">
+<div class="package-card">
 <div class="package-icon"><i class="fas fa-users"></i></div>
 <h4>Family Soup Bowl</h4>
 <div class="price">₦16,000</div>
@@ -421,7 +667,7 @@ footer ul li a:hover { color: var(--gold); }
 </ul>
 <a href="https://wa.me/2348160894006?text=I%20want%20the%20Family%20Soup%20Bowl%20(%E2%82%A616,000)%20from%20Hannah%27s%20Hot%20Pot" target="_blank" class="btn btn-primary btn-block" style="font-size:0.85rem;padding:10px 20px;"><i class="fab fa-whatsapp"></i> Order Now</a>
 </div>
-<div class="package-card featured reveal">
+<div class="package-card featured">
 <div class="package-icon"><i class="fas fa-briefcase"></i></div>
 <h4>Staff Lunch Pack</h4>
 <div class="price">₦3,500</div>
@@ -434,7 +680,7 @@ footer ul li a:hover { color: var(--gold); }
 </ul>
 <a href="https://wa.me/2348160894006?text=I%20want%20the%20Staff%20Lunch%20Pack%20(%E2%82%A63,500)%20for%20my%20office%20from%20Hannah%27s%20Hot%20Pot" target="_blank" class="btn btn-primary btn-block" style="font-size:0.85rem;padding:10px 20px;"><i class="fab fa-whatsapp"></i> Order Now</a>
 </div>
-<div class="package-card reveal">
+<div class="package-card">
 <div class="package-icon"><i class="fas fa-gem"></i></div>
 <h4>Executive Pack</h4>
 <div class="price">₦5,000</div>
@@ -447,7 +693,7 @@ footer ul li a:hover { color: var(--gold); }
 </ul>
 <a href="https://wa.me/2348160894006?text=I%20want%20the%20Executive%20Pack%20(%E2%82%A65,000)%20from%20Hannah%27s%20Hot%20Pot" target="_blank" class="btn btn-primary btn-block" style="font-size:0.85rem;padding:10px 20px;"><i class="fab fa-whatsapp"></i> Order Now</a>
 </div>
-<div class="package-card reveal">
+<div class="package-card">
 <div class="package-icon"><i class="fas fa-trophy"></i></div>
 <h4>Occasion Tray</h4>
 <div class="price">₦85,000+</div>
@@ -471,26 +717,34 @@ footer ul li a:hover { color: var(--gold); }
 <p class="section-desc">From your phone to your plate in 4 easy steps</p>
 </div>
 <div class="container">
-<div class="steps">
-<div class="step reveal">
+<div class="steps reveal-stagger">
+<div class="step">
+<div class="step-icon"><i class="fas fa-utensils"></i></div>
 <div class="step-number">1</div>
-<h4>Choose Your Meal</h4>
-<p>Browse our menu and pick your favorite soup, swallow, protein, or combo.</p>
+<h4>Browse & Select</h4>
+<p>Explore our menu of 50+ authentic Akwa Ibom and Nigerian dishes. Pick your soups, swallows, proteins, and combos.</p>
+<span class="step-time"><i class="far fa-clock"></i> 2 mins</span>
 </div>
-<div class="step reveal">
+<div class="step">
+<div class="step-icon"><i class="fab fa-whatsapp"></i></div>
 <div class="step-number">2</div>
-<h4>Send a WhatsApp</h4>
-<p>Tap "Order Now" and tell us what you want. Or send "MENU" to our hotline.</p>
+<h4>Send via WhatsApp</h4>
+<p>Tap "Order Now" on any item or send a message to our hotline. Tell us what you want, your location, and preferred delivery time.</p>
+<span class="step-time"><i class="far fa-clock"></i> 1 min</span>
 </div>
-<div class="step reveal">
+<div class="step">
+<div class="step-icon"><i class="fas fa-fire"></i></div>
 <div class="step-number">3</div>
 <h4>We Cook Fresh</h4>
-<p>Mummy Hannah's team prepares your order with love. No shortcuts. Just legacy.</p>
+<p>Your order goes straight to Mummy Hannah's kitchen — no shortcuts, no pre-packaged food. Just fresh ingredients and traditional methods.</p>
+<span class="step-time"><i class="far fa-clock"></i> 30–45 mins</span>
 </div>
-<div class="step reveal">
+<div class="step">
+<div class="step-icon"><i class="fas fa-truck"></i></div>
 <div class="step-number">4</div>
 <h4>Hot Delivery</h4>
-<p>45-min delivery in Festac/Amuwo. Lagos wide via rider app. Sealed with legacy.</p>
+<p>Sealed hot, delivered fresh. 45 min within Festac/Amuwo. Lagos-wide via dispatch. Payment by transfer or cash on delivery.</p>
+<span class="step-time"><i class="far fa-clock"></i> 45 mins</span>
 </div>
 </div>
 </div>
@@ -503,8 +757,8 @@ footer ul li a:hover { color: var(--gold); }
 <p class="section-desc">Real reviews from real people who've tasted the 2nd generation difference</p>
 </div>
 <div class="container">
-<div class="testimonial-grid">
-<div class="testimonial-card reveal">
+<div class="testimonial-grid reveal-stagger">
+<div class="testimonial-card">
 <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
 <blockquote>"The Edikang Ikong from Hannah's is the closest thing to my grandmother's cooking. The real deal — no water, proper palm oil finish. Best in the world indeed!"</blockquote>
 <div class="testimonial-author">
@@ -512,7 +766,7 @@ footer ul li a:hover { color: var(--gold); }
 <div><strong>Ekaete U.</strong><br><span>Festac Town</span></div>
 </div>
 </div>
-<div class="testimonial-card reveal">
+<div class="testimonial-card">
 <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
 <blockquote>"Ordered the Corporate Pot for my team of 10. Everyone was impressed. The Plantain Fufu is a game changer. We've subscribed for weekly deliveries!"</blockquote>
 <div class="testimonial-author">
@@ -520,12 +774,71 @@ footer ul li a:hover { color: var(--gold); }
 <div><strong>Kelechi O.</strong><br><span>Lekki Phase 1</span></div>
 </div>
 </div>
-<div class="testimonial-card reveal">
+<div class="testimonial-card">
 <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
 <blockquote>"The Oxtail Pepper Soup is legendary. Perfect for Lagos cold nights. My husband says it's the best he's had since leaving Calabar. Thank you, Hannah's!"</blockquote>
 <div class="testimonial-author">
 <div class="avatar">A</div>
 <div><strong>Amara N.</strong><br><span>VI, Lagos</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="faq-section">
+<div class="container text-center reveal">
+<span class="section-label">FAQ</span>
+<h2 class="section-title">Frequently Asked Questions</h2>
+<p class="section-desc">Everything you need to know about ordering from Hannah's Hot Pot</p>
+</div>
+<div class="container" style="max-width:700px;">
+<div class="faq-list reveal-stagger">
+<div class="faq-item">
+<div class="faq-question">What areas do you deliver to? <i class="fas fa-chevron-down"></i></div>
+<div class="faq-answer"><p>We deliver across Festac Town, Amuwo Odofin, Lekki Phase 1, Victoria Island, and Ikeja. For areas outside these zones, contact us on WhatsApp to confirm availability. A delivery fee applies based on distance.</p></div>
+</div>
+<div class="faq-item">
+<div class="faq-question">How do I place an order? <i class="fas fa-chevron-down"></i></div>
+<div class="faq-answer"><p>Browse our menu, select your items, and tap "Order Now" to send a WhatsApp message. You can also send "MENU" to +234 816 089 4006 on WhatsApp and we'll guide you through the process.</p></div>
+</div>
+<div class="faq-item">
+<div class="faq-question">What are your payment options? <i class="fas fa-chevron-down"></i></div>
+<div class="faq-answer"><p>We accept bank transfers, USSD payments, and cash on delivery within Festac. Card payments coming soon. Full payment is required for orders above ₦15,000.</p></div>
+</div>
+<div class="faq-item">
+<div class="faq-question">How long does delivery take? <i class="fas fa-chevron-down"></i></div>
+<div class="faq-answer"><p>Standard delivery is 45 minutes within Festac and Amuwo. For Lekki, VI, and Ikeja, allow 60–90 minutes. Occasion trays and bulk orders require 48-hour advance booking.</p></div>
+</div>
+<div class="faq-item">
+<div class="faq-question">Do you cater for events and parties? <i class="fas fa-chevron-down"></i></div>
+<div class="faq-answer"><p>Yes! We provide full catering for corporate events, birthdays, weddings, and parties. Minimum 20 persons. 48-hour pre-order required. Contact us on WhatsApp for a customized menu and quote.</p></div>
+</div>
+<div class="faq-item">
+<div class="faq-question">What if I have dietary restrictions? <i class="fas fa-chevron-down"></i></div>
+<div class="faq-answer"><p>We offer diabetic-friendly options (Oat Fufu, Potato Swallow), keto-friendly choices (Cauliflower Pounded Yam), and vegetarian options. Just let us know your requirements when ordering.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="maps-section">
+<div class="container">
+<div class="maps-grid">
+<div class="reveal-left">
+<span class="section-label">Find Us</span>
+<h2 class="section-title">Visit or Order from Us</h2>
+<p class="section-desc">We're based in Festac Town, Lagos. Come say hello or order online for delivery.</p>
+<div class="contact-details">
+<div class="contact-detail-item"><i class="fas fa-map-marker-alt"></i> <span>Shop B12, Festival Road, Festac Town, Lagos</span></div>
+<div class="contact-detail-item"><i class="fas fa-phone"></i> <span>+234 816 089 4006</span></div>
+<div class="contact-detail-item"><i class="fas fa-clock"></i> <span>Mon–Sat: 8AM–9PM &nbsp;|&nbsp; Sun: 10AM–6PM</span></div>
+<div class="contact-detail-item"><i class="fas fa-envelope"></i> <span>hannahshotpot@gmail.com</span></div>
+</div>
+</div>
+<div class="reveal-right">
+<div class="map-container">
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.053192778174!2d3.281772!3d6.470196!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b88b8b8b8b8b8%3A0x8b8b8b8b8b8b8b!2sFestac%20Town!5e0!3m2!1sen!2sng!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>
 </div>
 </div>
@@ -543,10 +856,17 @@ footer ul li a:hover { color: var(--gold); }
 <footer>
 <div class="container">
 <div class="footer-grid">
-<div>
+<div class="footer-brand">
 <a href="#home" style="text-decoration:none;"><img src="LOGO.png" style="height:60px;border-radius:8px;margin-bottom:12px;" alt="Hannah's Hot Pot"></a>
 <p>Online Kitchen | Akwa Ibom Roots, Global Taste<br>From Mummy Hannah's Pot to Your Plate Since 1987.</p>
 <p style="margin-top:12px;"><strong style="color:#fff;">Distinct Perfection Business Plan</strong><br>37+ years of legacy. Reimagined for the digital generation.</p>
+<div class="footer-newsletter">
+<h5><i class="fas fa-envelope-open-text"></i> Get updates & offers</h5>
+<div class="newsletter-form">
+<input type="email" placeholder="Your email address">
+<button onclick="alert('Thank you for subscribing! We\'ll keep you posted.');this.previousElementSibling.value=''"><i class="fas fa-paper-plane"></i></button>
+</div>
+</div>
 </div>
 <div>
 <h4>Quick Links</h4>
@@ -619,6 +939,29 @@ footer ul li a:hover { color: var(--gold); }
 .music-float.muted i::before { content: '\f026'; }
 </style>
 
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+<div class="cart-header">
+<h3>Your Order</h3>
+<button class="cart-close" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+</div>
+<div class="cart-items" id="cartItems">
+<p class="cart-empty">Your cart is empty. Browse our menu to add items.</p>
+</div>
+<div class="cart-footer">
+<div class="cart-total">
+<span>Total</span>
+<span id="cartTotal">₦0</span>
+</div>
+<button class="btn btn-primary btn-block" onclick="checkoutCart()"><i class="fab fa-whatsapp"></i> Order via WhatsApp</button>
+</div>
+</div>
+
+<button class="cart-float" onclick="toggleCart()" title="View Cart">
+<i class="fas fa-shopping-cart"></i>
+<span class="cart-badge" id="cartBadge">0</span>
+</button>
+
 <script src="menu-data.js"></script>
 <script>
 // CLICK SOUND EFFECT + first-click activates background music
@@ -659,7 +1002,7 @@ document.querySelectorAll('a, button, .menu-order-btn, .btn').forEach(el => {
   el.addEventListener('click', playClick);
 });
 
-// SCROLL REVEAL ANIMATIONS
+// SCROLL REVEAL ANIMATIONS — overlapping reveal + parallax
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -667,10 +1010,10 @@ const revealObserver = new IntersectionObserver((entries) => {
       revealObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
 function observeReveal() {
-  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => revealObserver.observe(el));
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-up, .reveal-down, .reveal-scale, .reveal-rotate, .reveal-stagger').forEach(el => revealObserver.observe(el));
 }
 
 // LOGO SPIN ON SCROLL
@@ -684,7 +1027,41 @@ function initLogoSpin() {
   });
 }
 
-// PARALLAX ON SCROLL
+// PARALLAX + OVERLAPPING DEPTH ON SCROLL
+function initScrollEffects() {
+  const els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-up, .reveal-down, .reveal-scale, .reveal-rotate, .legacy-image, .hero-content, .menu-item, .package-card, .step, .testimonial-card');
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const sy = window.pageYOffset;
+        const vh = window.innerHeight;
+
+        els.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          const center = rect.top + rect.height / 2;
+          const progress = Math.max(0, Math.min(1, 1 - (center / vh)));
+
+          if (progress > 0 && progress < 1) {
+            const depth = parseFloat(el.dataset.depth || 0.05);
+            const moveY = (progress - 0.5) * 60 * depth;
+            const scale = 1 + (progress - 0.5) * 0.04 * depth;
+            const opacity = Math.min(1, progress * 2);
+            el.style.transform = el.style.transform || '';
+            if (!el.classList.contains('visible')) {
+              el.style.transform = `translateY(${moveY}px) scale(${scale})`;
+            }
+          }
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+}
+
+// PARALLAX ON SCROLL (legacy parallax-bg elements)
 function initParallax() {
   const parallaxEls = document.querySelectorAll('.parallax-bg');
   if (parallaxEls.length === 0) return;
@@ -704,10 +1081,183 @@ function initParallax() {
   });
 }
 
+// FOOD COLLAGE SHUFFLE
+const collageImages = [
+  "calabar foods and their names - Google Search/imgi_371_Edika-Ikong-Soup-Naija-Soup-Pot-Nigeria-Soup-Vegetable-Soup-Calabar-Chef-Native-Soup-naija-home-food-Lagos-personal-chef-Ama-Cuisine-Ecstasy-Foods.jpg",
+  "calabar foods and their names - Google Search/imgi_373_afang-soup.jpg",
+  "calabar foods and their names - Google Search/imgi_424_Fisherman-Soup-1.jpg",
+  "calabar foods and their names - Google Search/imgi_397_ayamase.jpg",
+  "calabar foods and their names - Google Search/imgi_364_Ekpang-Nkukwo-1.jpg",
+  "calabar foods and their names - Google Search/imgi_404_Ekoki-1.jpg",
+  "calabar foods and their names - Google Search/imgi_389_Abak-atama.jpg",
+  "calabar foods and their names - Google Search/imgi_376_editan_soup_jsupwt.jpg",
+  "calabar foods and their names - Google Search/imgi_399_otong-soup-21-1.jpg",
+  "calabar foods and their names - Google Search/imgi_401_afia-efere-afrolems.jpg",
+  "calabar foods and their names - Google Search/imgi_368_Edikaikong_npgomc.jpg",
+  "calabar foods and their names - Google Search/imgi_382_Nigerian-Live-Chicken-Stew-Nigeria-Food-Buka-Stew-Nigeria-Soup-Calabar-Chef-Native-Soup-naija-home-food-Lagos-personal-chef-Ama-Cuisine-Ecstasy-Foods.jpg"
+];
+
+function initCollage() {
+  const container = document.getElementById('foodCollage');
+  if (!container) return;
+  renderCollage();
+  setInterval(shuffleCollage, 4000);
+}
+
+function renderCollage() {
+  const container = document.getElementById('foodCollage');
+  const shuffled = [...collageImages].sort(() => Math.random() - 0.5).slice(0, 6);
+  container.innerHTML = shuffled.map((src, i) => `
+    <div class="collage-item" style="background-image:url('${src}'); transition-delay:${i * 0.1}s"></div>
+  `).join('');
+}
+
+function shuffleCollage() {
+  const container = document.getElementById('foodCollage');
+  const items = container.querySelectorAll('.collage-item');
+  const newShuffle = [...collageImages].sort(() => Math.random() - 0.5).slice(0, 6);
+  items.forEach((item, i) => {
+    item.style.opacity = '0';
+    item.style.transform = 'scale(0.9)';
+    setTimeout(() => {
+      item.style.backgroundImage = `url('${newShuffle[i]}')`;
+      item.style.opacity = '1';
+      item.style.transform = 'scale(1)';
+    }, 400);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   observeReveal();
   initParallax();
   initLogoSpin();
+  initScrollEffects();
+  initCollage();
+});
+
+// CART SYSTEM
+let cart = JSON.parse(localStorage.getItem('hannahs_cart')) || [];
+
+function toggleCart() {
+  document.getElementById('cartOverlay').classList.toggle('open');
+  document.getElementById('cartSidebar').classList.toggle('open');
+}
+
+function addToCart(name, price, img) {
+  const existing = cart.find(item => item.name === name);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({ name, price, img, qty: 1 });
+  }
+  saveCart(); renderCart();
+  if (!document.getElementById('cartSidebar').classList.contains('open')) {
+    toggleCart();
+  }
+}
+
+function removeFromCart(name) {
+  cart = cart.filter(item => item.name !== name);
+  saveCart(); renderCart();
+}
+
+function updateQty(name, delta) {
+  const item = cart.find(i => i.name === name);
+  if (item) {
+    item.qty = Math.max(1, item.qty + delta);
+    saveCart(); renderCart();
+  }
+}
+
+function saveCart() {
+  localStorage.setItem('hannahs_cart', JSON.stringify(cart));
+  updateCartBadge();
+}
+
+function updateCartBadge() {
+  const total = cart.reduce((sum, item) => sum + item.qty, 0);
+  const badge = document.getElementById('cartBadge');
+  if (badge) {
+    badge.textContent = total;
+    badge.style.display = total > 0 ? 'flex' : 'none';
+  }
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  const totalEl = document.getElementById('cartTotal');
+  if (!container) return;
+  if (cart.length === 0) {
+    container.innerHTML = '<p class="cart-empty">Your cart is empty. Browse our menu to add items.</p>';
+    totalEl.textContent = '₦0';
+    return;
+  }
+  let total = 0;
+  container.innerHTML = cart.map(item => {
+    const priceNum = parseFloat(String(item.price).replace(/[₦,]/g, '')) || 0;
+    const itemTotal = priceNum * item.qty;
+    total += itemTotal;
+    return `
+      <div class="cart-item">
+        <div class="cart-item-img" style="background-image:url('${item.img}')"></div>
+        <div class="cart-item-info">
+          <h4>${item.name}</h4>
+          <div class="cart-item-controls">
+            <button onclick="updateQty('${item.name.replace(/'/g, "\\'")}', -1)">−</button>
+            <span>${item.qty}</span>
+            <button onclick="updateQty('${item.name.replace(/'/g, "\\'")}', 1)">+</button>
+          </div>
+        </div>
+        <div class="cart-item-price">₦${itemTotal.toLocaleString()}</div>
+        <button class="cart-item-remove" onclick="removeFromCart('${item.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i></button>
+      </div>
+    `;
+  }).join('');
+  totalEl.textContent = `₦${total.toLocaleString()}`;
+}
+
+function checkoutCart() {
+  if (cart.length === 0) return;
+  let message = 'Hi Hannah\'s Hot Pot! I want to order:%0A%0A';
+  let total = 0;
+  cart.forEach(item => {
+    const priceNum = parseFloat(String(item.price).replace(/[₦,]/g, '')) || 0;
+    const itemTotal = priceNum * item.qty;
+    total += itemTotal;
+    message += `${item.qty}x ${item.name} — ₦${itemTotal.toLocaleString()}%0A`;
+  });
+  message += `%0A*Total: ₦${total.toLocaleString()}*%0A%0A`;
+  message += 'Please confirm availability and delivery info. 🔥';
+  window.open(`https://wa.me/2348160894006?text=${message}`, '_blank');
+}
+
+// FAQ ACCORDION
+document.querySelectorAll('.faq-question').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+// ADD TO CART (event delegation)
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.add-to-cart');
+  if (btn) {
+    addToCart(btn.dataset.name, btn.dataset.price, btn.dataset.img);
+  }
+});
+
+// MENU SEARCH
+document.getElementById('menuSearch')?.addEventListener('input', function() {
+  const query = this.value.toLowerCase().trim();
+  document.querySelectorAll('#menuGrid .menu-item').forEach(item => {
+    const name = item.querySelector('h4').textContent.toLowerCase();
+    const desc = item.querySelector('p').textContent.toLowerCase();
+    const match = name.includes(query) || desc.includes(query);
+    item.style.display = match ? '' : 'none';
+  });
 });
 
 // RE-OBSERVE after menu render
@@ -727,20 +1277,28 @@ function renderMenu(category) {
   menuGrid.innerHTML = items.map(item => {
     const slug = slugify(item.name);
     return `
-    <a href="menu-item.html?id=${slug}" class="menu-item reveal" style="text-decoration:none;color:inherit;display:block">
-      <div class="menu-item-img" style="background-image:url('${item.img}')">
-        <span class="menu-item-tag">${item.tag}</span>
-      </div>
+    <div class="menu-item">
+      <a href="menu-item.html?id=${slug}" style="text-decoration:none;color:inherit;display:block">
+        <div class="menu-item-img" style="background-image:url('${item.img}')">
+          <span class="menu-item-tag">${item.tag}</span>
+        </div>
+      </a>
       <div class="menu-item-body">
-        <h4>${item.name}</h4>
-        <p>${item.desc}</p>
+        <a href="menu-item.html?id=${slug}" style="text-decoration:none;color:inherit">
+          <h4>${item.name}</h4>
+          <p>${item.desc}</p>
+        </a>
         <div class="menu-item-footer">
           <span class="menu-price">${item.price}</span>
-          <span class="menu-order-btn"><i class="fas fa-eye"></i> View</span>
+          <div style="display:flex;gap:6px">
+            <a href="menu-item.html?id=${slug}" class="menu-order-btn"><i class="fas fa-eye"></i> View</a>
+            <button class="menu-order-btn add-to-cart" style="background:var(--gold);color:var(--dark)" data-name="${item.name}" data-price="${item.price}" data-img="${item.img}"><i class="fas fa-cart-plus"></i> Add</button>
+          </div>
         </div>
       </div>
-    </a>
+    </div>
   `}).join('');
+  updateCartBadge();
 }
 
 tabs.forEach(tab => {
@@ -752,6 +1310,8 @@ tabs.forEach(tab => {
 });
 
 renderMenu('flagship');
+updateCartBadge();
+renderCart();
 </script>
 </body>
 </html>
