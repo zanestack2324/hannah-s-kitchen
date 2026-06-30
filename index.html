@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hannah's Hot Pot – Online Kitchen | Akwa Ibom Roots, Global Taste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --brand: #D43728;
+  --brand-dark: #A8281C;
+  --gold: #E8A838;
+  --cream: #FFF8F0;
+  --dark: #1A1A2E;
+  --text: #2D2D44;
+  --text-light: #6B6B80;
+  --bg: #FEFCF8;
+  --card: #FFFFFF;
+  --shadow: 0 8px 32px rgba(0,0,0,0.08);
+  --radius: 16px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Lato', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4, .logo-text { font-family: 'Lato', sans-serif; font-style: italic; font-weight: 700; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* NAV */
+nav {
+  position: fixed; top:0; left:0; right:0;
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  z-index: 1000; padding: 4px 0; overflow: visible;
+}
+nav .container { display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { display: flex; align-items: center; }
+.nav-logo img { height: 300px; border-radius: 12px; margin: -40px 0 -260px 0; transition: transform 0.1s linear; will-change: transform; }
+.nav-links { display: flex; gap: 24px; align-items: center; }
+.nav-links a { text-decoration: none; color: var(--text); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--brand); }
+.nav-cta {
+  background: var(--brand); color: #fff !important; padding: 8px 20px; border-radius: 50px;
+  font-weight: 600 !important; font-size: 0.85rem;
+}
+.nav-cta:hover { background: var(--brand-dark) !important; }
+.menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer; }
+
+/* HERO */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  background: linear-gradient(135deg, #1A1A2E 0%, #2D1B1B 50%, #1A1A2E 100%);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset:0;
+  background: url('https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=1600&q=80') center/cover no-repeat;
+  opacity: 0.12; pointer-events: none;
+  background-attachment: fixed;
+  transform: translateZ(0);
+}
+.hero-overlay {
+  position: absolute; inset:0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(212,55,40,0.15) 0%, transparent 60%);
+}
+.hero .container { position: relative; z-index: 2; display: flex; align-items: center; padding-top: 80px; padding-bottom: 80px; }
+.hero-content { flex: 1; }
+.hero-badge {
+  display: inline-block; background: rgba(212,55,40,0.15); color: var(--gold);
+  padding: 6px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: 3.8rem; line-height: 1.1; color: #fff; margin-bottom: 16px;
+}
+.hero h1 span { color: var(--gold); }
+.hero p {
+  font-size: 1.1rem; color: rgba(255,255,255,0.7); max-width: 540px; margin-bottom: 32px;
+  line-height: 1.8;
+}
+.hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 50px;
+  font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none;
+}
+.btn-primary { background: var(--brand); color: #fff; }
+.btn-primary:hover { background: var(--brand-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,55,40,0.3); }
+.btn-outline { border: 2px solid rgba(255,255,255,0.3); color: #fff; background: transparent; }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+.hero-stats { display: flex; gap: 40px; margin-top: 40px; }
+.hero-stat h3 { font-size: 2rem; color: var(--gold); }
+.hero-stat p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 0; }
+
+/* SECTION COMMON */
+section { padding: 100px 0; }
+.section-label {
+  display: inline-block; color: var(--brand); font-weight: 600; font-size: 0.8rem;
+  text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;
+}
+.section-title {
+  font-size: 2.4rem; color: var(--dark); margin-bottom: 16px; line-height: 1.2;
+}
+.section-desc { color: var(--text-light); max-width: 600px; margin-bottom: 48px; font-size: 1.05rem; }
+.text-center { text-align: center; }
+.text-center .section-desc { margin-left: auto; margin-right: auto; }
+
+/* LEGACY */
+.legacy { background: var(--cream); }
+.legacy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.legacy-image { position: relative; }
+.legacy-image img { width: 100%; border-radius: var(--radius); box-shadow: var(--shadow); }
+.legacy-image::before {
+  content: '1987'; position: absolute; top: -20px; left: -20px;
+  font-family: 'Lato', sans-serif; font-size: 6rem; font-weight: 900;
+  color: rgba(212,55,40,0.08); line-height: 1;
+}
+.legacy-badge {
+  position: absolute; bottom: -16px; right: -16px;
+  background: var(--brand); color: #fff; padding: 12px 24px; border-radius: 12px;
+  font-weight: 600; font-size: 0.85rem;
+}
+.slogan-list { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+.slogan-item { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; color: var(--text); }
+.slogan-item i { color: var(--gold); font-size: 0.8rem; }
+
+/* MENU SECTION */
+.menu-section { background: #fff; }
+.menu-tabs {
+  display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px;
+}
+.menu-tab {
+  padding: 10px 24px; border-radius: 50px; border: 1.5px solid #E5E5E5;
+  background: transparent; font-weight: 500; font-size: 0.85rem; cursor: pointer;
+  transition: all 0.2s; color: var(--text-light);
+}
+.menu-tab:hover { border-color: var(--brand); color: var(--brand); }
+.menu-tab.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+.menu-item {
+  background: var(--card); border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s;
+}
+.menu-item:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+.menu-item-img {
+  height: 200px; background-size: cover; background-position: center; position: relative;
+}
+.menu-item-tag {
+  position: absolute; top: 12px; left: 12px;
+  background: var(--brand); color: #fff; padding: 4px 12px; border-radius: 50px;
+  font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+}
+.menu-item-body { padding: 20px; }
+.menu-item-body h4 { font-size: 1.05rem; margin-bottom: 6px; color: var(--dark); }
+.menu-item-body p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 12px; }
+.menu-item-footer { display: flex; justify-content: space-between; align-items: center; }
+.menu-price { font-weight: 700; color: var(--brand); font-size: 1.1rem; }
+.menu-order-btn {
+  background: var(--dark); color: #fff; border: none; padding: 6px 16px; border-radius: 50px;
+  font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.2s; text-decoration: none;
+}
+.menu-order-btn:hover { background: var(--brand); }
+
+/* PACKAGES */
+.packages { background: var(--cream); }
+.package-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+.package-card {
+  background: #fff; border-radius: var(--radius); padding: 32px; text-align: center;
+  box-shadow: var(--shadow); transition: transform 0.3s; position: relative;
+}
+.package-card.featured { border: 2px solid var(--gold); }
+.package-card.featured::before {
+  content: 'BEST VALUE'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: #fff; padding: 4px 16px; border-radius: 50px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+}
+.package-card:hover { transform: translateY(-4px); }
+.package-icon { font-size: 2.5rem; color: var(--brand); margin-bottom: 16px; }
+.package-card h4 { font-size: 1.2rem; margin-bottom: 8px; }
+.package-card .price { font-size: 1.8rem; font-weight: 700; color: var(--brand); margin: 12px 0; }
+.package-card p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 16px; }
+.package-card ul { list-style: none; text-align: left; margin-bottom: 20px; }
+.package-card ul li { padding: 6px 0; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
+.package-card ul li i { color: var(--gold); font-size: 0.75rem; }
+
+/* HOW TO ORDER */
+.how-to-order { background: var(--dark); color: #fff; }
+.how-to-order .section-title { color: #fff; }
+.how-to-order .section-desc { color: rgba(255,255,255,0.6); }
+.steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 32px; counter-reset: step; }
+.step { text-align: center; position: relative; }
+.step-number {
+  width: 60px; height: 60px; border-radius: 50%; background: rgba(212,55,40,0.2);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+  font-family: 'Lato', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--gold);
+}
+.step h4 { color: #fff; margin-bottom: 8px; }
+.step p { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+
+/* TESTIMONIALS */
+.testimonials { background: #fff; }
+.testimonial-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+.testimonial-card {
+  background: var(--cream); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
+}
+.testimonial-card .stars { color: var(--gold); margin-bottom: 12px; font-size: 0.9rem; }
+.testimonial-card blockquote { font-size: 0.95rem; font-style: italic; color: var(--text); margin-bottom: 16px; line-height: 1.7; }
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.testimonial-author .avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--brand); display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 1.1rem;
+}
+.testimonial-author strong { font-size: 0.9rem; }
+.testimonial-author span { font-size: 0.8rem; color: var(--text-light); }
+
+/* ORDER CTA */
+.order-cta {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  text-align: center; padding: 80px 0;
+}
+.order-cta h2 { color: #fff; font-size: 2.4rem; margin-bottom: 12px; }
+.order-cta p { color: rgba(255,255,255,0.8); margin-bottom: 32px; font-size: 1.1rem; }
+.order-cta .btn-outline { border-color: rgba(255,255,255,0.5); }
+.order-cta .btn-outline:hover { border-color: #fff; color: #fff; }
+
+/* FOOTER */
+footer { background: var(--dark); color: rgba(255,255,255,0.6); padding: 60px 0 30px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+footer h4 { color: #fff; font-size: 1rem; margin-bottom: 16px; }
+footer p { font-size: 0.85rem; line-height: 1.7; }
+footer ul { list-style: none; }
+footer ul li { margin-bottom: 10px; }
+footer ul li a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+footer ul li a:hover { color: var(--gold); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; }
+.social-links { display: flex; gap: 12px; }
+.social-links a {
+  width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.5);
+  text-decoration: none; transition: all 0.2s;
+}
+.social-links a:hover { background: var(--brand); color: #fff; }
+
+/* SCROLL ANIMATIONS */
+.reveal {
+  opacity: 0; transform: translateY(50px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-60px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(60px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+.reveal-scale { opacity: 0; transform: scale(0.9); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+/* PARALLAX SECTIONS */
+.parallax-section { position: relative; overflow: hidden; }
+.parallax-bg {
+  position: absolute; inset: -100px 0 0; z-index: 0;
+  background-size: cover; background-position: center;
+  will-change: transform; pointer-events: none;
+}
+
+/* FLOATING WHATSAPP */
+.whatsapp-float {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #25D366; color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+  text-decoration: none; transition: transform 0.3s;
+}
+.whatsapp-float:hover { transform: scale(1.1); }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.6);
+  display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: #fff; border-radius: var(--radius); max-width: 500px; width: 90%;
+  padding: 40px; position: relative; max-height: 90vh; overflow-y: auto;
+}
+.modal-close {
+  position: absolute; top: 16px; right: 16px; background: none; border: none;
+  font-size: 1.5rem; cursor: pointer; color: var(--text-light);
+}
+.modal h3 { font-size: 1.5rem; margin-bottom: 8px; }
+.modal .order-summary { background: var(--cream); padding: 16px; border-radius: 8px; margin: 16px 0; }
+.modal .order-summary p { font-size: 0.9rem; margin-bottom: 4px; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%; padding: 12px 16px; border: 1.5px solid #E5E5E5; border-radius: 8px;
+  font-family: 'Lato', sans-serif; font-size: 0.9rem; transition: border 0.2s;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  border-color: var(--brand); outline: none;
+}
+.btn-block { width: 100%; text-align: center; justify-content: center; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; flex-direction: column; padding: 20px; border-bottom: 1px solid #eee; }
+  .nav-links.open { display: flex; }
+  .menu-toggle { display: block; }
+  .hero .container { flex-direction: column; text-align: center; padding-top: 100px; }
+  .hero h1 { font-size: 2.4rem; }
+  .hero p { margin-left: auto; margin-right: auto; }
+  .hero-buttons { justify-content: center; }
+  .hero-stats { justify-content: center; }
+  .legacy-grid { grid-template-columns: 1fr; }
+  .section-title { font-size: 1.8rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .package-grid { grid-template-columns: 1fr; }
+  .menu-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.8rem; }
+  .hero-stats { gap: 20px; }
+  .hero-stat h3 { font-size: 1.4rem; }
+  section { padding: 60px 0; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container">
+<div class="nav-logo">
+<a href="#home"><img src="LOGO.png" alt="Hannah's Hot Pot" id="navLogo"></a>
+</div>
+<button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+<div class="nav-links">
+<a href="#menu">Menu</a>
+<a href="#packages">Packages</a>
+<a href="#legacy">Our Story</a>
+<a href="#order" class="nav-cta"><i class="fab fa-whatsapp"></i> Order Now</a>
+</div>
+</div>
+</nav>
+
+<section class="hero" id="home">
+<div class="hero-overlay"></div>
+<div class="container">
+<div class="hero-content reveal-left">
+<div class="hero-badge"><i class="fas fa-crown"></i> Est. 1987 · 2nd Generation</div>
+<h1>Hannah's <span>Hot Pot</span></h1>
+<p>From Mummy Hannah's pot to your plate. No shortcuts. Just legacy. <br><strong>We make the best Edikang Ikong in the world.</strong></p>
+<div class="hero-buttons">
+<a href="#menu" class="btn btn-primary"><i class="fas fa-utensils"></i> View Menu</a>
+<a href="https://wa.me/2348160894006?text=I%20want%20to%20order%20from%20Hannah%27s%20Hot%20Pot%20%F0%9F%94%A5" target="_blank" class="btn btn-outline"><i class="fab fa-whatsapp"></i> Order on WhatsApp</a>
+</div>
+<div class="hero-stats">
+<div class="hero-stat"><h3>37+</h3><p>Years of Legacy</p></div>
+<div class="hero-stat"><h3>50+</h3><p>Menu Items</p></div>
+<div class="hero-stat"><h3>45min</h3><p>Delivery Promise</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="legacy" id="legacy">
+<div class="container">
+<div class="legacy-grid">
+<div class="legacy-image reveal-left">
+<img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&q=80" alt="Mummy Hannah's Kitchen">
+<div class="legacy-badge"><i class="fas fa-heart"></i> Legacy Since 1987</div>
+</div>
+<div class="reveal-right">
+<span class="section-label">Our Story</span>
+<h2 class="section-title">Akwa Ibom Roots. <br>Global Taste.</h2>
+<p class="section-desc" style="margin-bottom:20px">Hannah's Hot Spot has fed Festac since 1987. Known for authentic Akwa Ibom flavors, clean cooking, and generous portions. Hannah's Hot Pot is the online evolution — same recipes, same love from Mummy Hannah, now delivered to your home, office, and events across Lagos + beyond.</p>
+<p style="color:var(--text-light); margin-bottom:20px;"><strong>Nigeria's first 2nd-generation cloud kitchen.</strong> Heritage recipes, modern delivery.</p>
+<div class="slogan-list">
+<div class="slogan-item"><i class="fas fa-check-circle"></i> Homemade. Rich. Healthy. Nigerian.</div>
+<div class="slogan-item"><i class="fas fa-check-circle"></i> We make the best Edikang Ikong in the world</div>
+<div class="slogan-item"><i class="fas fa-check-circle"></i> Legacy in every bite. Innovation in every bowl.</div>
+<div class="slogan-item"><i class="fas fa-check-circle"></i> Taste the 2nd Generation Difference</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="menu-section" id="menu">
+<div class="container text-center reveal">
+<span class="section-label">Our Menu</span>
+<h2 class="section-title">From Mummy's Pot to Your Plate</h2>
+<p class="section-desc">Homemade. Rich. Healthy. Nigerian. — Freshly prepared daily with premium ingredients sourced directly from Akwa Ibom farms.</p>
+<div class="menu-tabs">
+<button class="menu-tab active" data-category="flagship">Flagship Soups</button>
+<button class="menu-tab" data-category="swallow">Swallow 2.0</button>
+<button class="menu-tab" data-category="pepper">Pepper Soup</button>
+<button class="menu-tab" data-category="proteins">Proteins</button>
+<button class="menu-tab" data-category="rice">Rice Meals</button>
+<button class="menu-tab" data-category="calabar">Calabar Specials</button>
+</div>
+</div>
+<div class="container">
+<div class="menu-grid" id="menuGrid"></div>
+</div>
+</section>
+
+<section class="packages" id="packages">
+<div class="container text-center reveal">
+<span class="section-label">Best Value</span>
+<h2 class="section-title">Family · Office · Occasion Packs</h2>
+<p class="section-desc">Different bowls. Bigger value. Less stress. Feeds more people.</p>
+</div>
+<div class="container">
+<div class="package-grid">
+<div class="package-card reveal">
+<div class="package-icon"><i class="fas fa-users"></i></div>
+<h4>Family Soup Bowl</h4>
+<div class="price">₦16,000</div>
+<p>Feeds 4-6 people. Weekend pot solution.</p>
+<ul>
+<li><i class="fas fa-check"></i> Edikang Ikong/Afang/Banga</li>
+<li><i class="fas fa-check"></i> 6 wraps of swallow</li>
+<li><i class="fas fa-check"></i> 4 assorted proteins</li>
+<li><i class="fas fa-check"></i> Side of plantain</li>
+</ul>
+<a href="https://wa.me/2348160894006?text=I%20want%20the%20Family%20Soup%20Bowl%20(%E2%82%A616,000)%20from%20Hannah%27s%20Hot%20Pot" target="_blank" class="btn btn-primary btn-block" style="font-size:0.85rem;padding:10px 20px;"><i class="fab fa-whatsapp"></i> Order Now</a>
+</div>
+<div class="package-card featured reveal">
+<div class="package-icon"><i class="fas fa-briefcase"></i></div>
+<h4>Staff Lunch Pack</h4>
+<div class="price">₦3,500</div>
+<p>Per person. Min. 10 packs.</p>
+<ul>
+<li><i class="fas fa-check"></i> Soup of the day</li>
+<li><i class="fas fa-check"></i> Swallow of choice</li>
+<li><i class="fas fa-check"></i> 2 proteins</li>
+<li><i class="fas fa-check"></i> Zobo drink</li>
+</ul>
+<a href="https://wa.me/2348160894006?text=I%20want%20the%20Staff%20Lunch%20Pack%20(%E2%82%A63,500)%20for%20my%20office%20from%20Hannah%27s%20Hot%20Pot" target="_blank" class="btn btn-primary btn-block" style="font-size:0.85rem;padding:10px 20px;"><i class="fab fa-whatsapp"></i> Order Now</a>
+</div>
+<div class="package-card reveal">
+<div class="package-icon"><i class="fas fa-gem"></i></div>
+<h4>Executive Pack</h4>
+<div class="price">₦5,000</div>
+<p>Premium lunch experience.</p>
+<ul>
+<li><i class="fas fa-check"></i> Pepper Soup or Rice</li>
+<li><i class="fas fa-check"></i> 3 premium proteins</li>
+<li><i class="fas fa-check"></i> Side of choice</li>
+<li><i class="fas fa-check"></i> Chapman drink</li>
+</ul>
+<a href="https://wa.me/2348160894006?text=I%20want%20the%20Executive%20Pack%20(%E2%82%A65,000)%20from%20Hannah%27s%20Hot%20Pot" target="_blank" class="btn btn-primary btn-block" style="font-size:0.85rem;padding:10px 20px;"><i class="fab fa-whatsapp"></i> Order Now</a>
+</div>
+<div class="package-card reveal">
+<div class="package-icon"><i class="fas fa-trophy"></i></div>
+<h4>Occasion Tray</h4>
+<div class="price">₦85,000+</div>
+<p>Serves 20-50 people. 48hr pre-order.</p>
+<ul>
+<li><i class="fas fa-check"></i> 20L Pepper Soup/25L Soup</li>
+<li><i class="fas fa-check"></i> 40-60 wraps/sides</li>
+<li><i class="fas fa-check"></i> Mixed protein platter</li>
+<li><i class="fas fa-check"></i> Serving bowls + napkins</li>
+</ul>
+<a href="https://wa.me/2348160894006?text=I%20want%20an%20Occasion%20Tray%20from%20Hannah%27s%20Hot%20Pot%20for%20my%20event" target="_blank" class="btn btn-primary btn-block" style="font-size:0.85rem;padding:10px 20px;"><i class="fab fa-whatsapp"></i> Order Now</a>
+</div>
+</div>
+</div>
+</section>
+
+<section class="how-to-order">
+<div class="container text-center reveal">
+<span class="section-label" style="color:var(--gold);">Simple & Fast</span>
+<h2 class="section-title">How to Order</h2>
+<p class="section-desc">From your phone to your plate in 4 easy steps</p>
+</div>
+<div class="container">
+<div class="steps">
+<div class="step reveal">
+<div class="step-number">1</div>
+<h4>Choose Your Meal</h4>
+<p>Browse our menu and pick your favorite soup, swallow, protein, or combo.</p>
+</div>
+<div class="step reveal">
+<div class="step-number">2</div>
+<h4>Send a WhatsApp</h4>
+<p>Tap "Order Now" and tell us what you want. Or send "MENU" to our hotline.</p>
+</div>
+<div class="step reveal">
+<div class="step-number">3</div>
+<h4>We Cook Fresh</h4>
+<p>Mummy Hannah's team prepares your order with love. No shortcuts. Just legacy.</p>
+</div>
+<div class="step reveal">
+<div class="step-number">4</div>
+<h4>Hot Delivery</h4>
+<p>45-min delivery in Festac/Amuwo. Lagos wide via rider app. Sealed with legacy.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="testimonials">
+<div class="container text-center reveal">
+<span class="section-label">Testimonials</span>
+<h2 class="section-title">What Our Customers Say</h2>
+<p class="section-desc">Real reviews from real people who've tasted the 2nd generation difference</p>
+</div>
+<div class="container">
+<div class="testimonial-grid">
+<div class="testimonial-card reveal">
+<div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+<blockquote>"The Edikang Ikong from Hannah's is the closest thing to my grandmother's cooking. The real deal — no water, proper palm oil finish. Best in the world indeed!"</blockquote>
+<div class="testimonial-author">
+<div class="avatar">E</div>
+<div><strong>Ekaete U.</strong><br><span>Festac Town</span></div>
+</div>
+</div>
+<div class="testimonial-card reveal">
+<div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+<blockquote>"Ordered the Corporate Pot for my team of 10. Everyone was impressed. The Plantain Fufu is a game changer. We've subscribed for weekly deliveries!"</blockquote>
+<div class="testimonial-author">
+<div class="avatar">K</div>
+<div><strong>Kelechi O.</strong><br><span>Lekki Phase 1</span></div>
+</div>
+</div>
+<div class="testimonial-card reveal">
+<div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+<blockquote>"The Oxtail Pepper Soup is legendary. Perfect for Lagos cold nights. My husband says it's the best he's had since leaving Calabar. Thank you, Hannah's!"</blockquote>
+<div class="testimonial-author">
+<div class="avatar">A</div>
+<div><strong>Amara N.</strong><br><span>VI, Lagos</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="order-cta" id="order">
+<div class="container reveal">
+<h2>Ready to Taste the 2nd Generation Difference?</h2>
+<p>Send a message on WhatsApp to place your order. Fresh, hot, and delivered to your door.</p>
+<a href="https://wa.me/2348160894006?text=Hello%20Hannah%27s%20Hot%20Pot!%20I%20want%20to%20place%20an%20order%20%F0%9F%94%A5" target="_blank" class="btn btn-outline btn-lg"><i class="fab fa-whatsapp"></i> Order on WhatsApp Now</a>
+</div>
+</section>
+
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div>
+<a href="#home" style="text-decoration:none;"><img src="LOGO.png" style="height:60px;border-radius:8px;margin-bottom:12px;" alt="Hannah's Hot Pot"></a>
+<p>Online Kitchen | Akwa Ibom Roots, Global Taste<br>From Mummy Hannah's Pot to Your Plate Since 1987.</p>
+<p style="margin-top:12px;"><strong style="color:#fff;">Distinct Perfection Business Plan</strong><br>37+ years of legacy. Reimagined for the digital generation.</p>
+</div>
+<div>
+<h4>Quick Links</h4>
+<ul>
+<li><a href="#menu">Menu</a></li>
+<li><a href="#packages">Packages</a></li>
+<li><a href="#legacy">Our Story</a></li>
+<li><a href="#order">Order Now</a></li>
+</ul>
+</div>
+<div>
+<h4>Contact</h4>
+<ul>
+<li><a href="https://wa.me/2348160894006"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+<li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+<li><a href="#"><i class="fas fa-envelope"></i> Email Us</a></li>
+<li><a href="#"><i class="fas fa-phone"></i> Call Us</a></li>
+</ul>
+</div>
+<div>
+<h4>Hours</h4>
+<ul>
+<li>Mon – Sat: 8AM – 9PM</li>
+<li>Sunday: 10AM – 6PM</li>
+<li><br></li>
+<li><strong style="color:#fff;">45-min delivery</strong></li>
+<li>Festac / Amuwo / Lekki / VI / Ikeja</li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<span>&copy; 2026 Hannah's Hot Pot. All rights reserved. Built with legacy.</span>
+<div class="social-links">
+<a href="#"><i class="fab fa-instagram"></i></a>
+<a href="#"><i class="fab fa-facebook-f"></i></a>
+<a href="https://wa.me/2348160894006"><i class="fab fa-whatsapp"></i></a>
+<a href="#"><i class="fab fa-tiktok"></i></a>
+</div>
+</div>
+</div>
+</footer>
+
+<a href="https://wa.me/2348160894006?text=I%20want%20to%20order%20from%20Hannah%27s%20Hot%20Pot%20%F0%9F%94%A5" target="_blank" class="whatsapp-float" title="Order on WhatsApp">
+<i class="fab fa-whatsapp"></i>
+</a>
+
+<audio id="bgMusic" loop preload="auto">
+<source src="Akwa Ibom Highlife Music - Nigeria Music 2023 - Premium Live Band.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="clickSound" preload="auto">
+<source src="CLICK SOUND.mp3" type="audio/mpeg">
+</audio>
+
+<button id="musicToggle" class="music-float" title="Toggle Background Music">
+<i class="fas fa-music"></i>
+</button>
+
+<style>
+.music-float {
+  position: fixed; bottom: 90px; right: 24px; z-index: 999;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--brand); color: #fff; border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; box-shadow: 0 4px 20px rgba(212,55,40,0.4);
+  cursor: pointer; transition: all 0.3s;
+}
+.music-float:hover { transform: scale(1.1); background: var(--brand-dark); }
+.music-float.muted { background: #6B6B80; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.music-float.muted i::before { content: '\f026'; }
+</style>
+
+<script src="menu-data.js"></script>
+<script>
+// CLICK SOUND EFFECT + first-click activates background music
+const clickAudio = document.getElementById('clickSound');
+const bgMusic = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicToggle');
+let musicPlaying = false;
+let firstClick = true;
+
+function startMusic() {
+  if (musicPlaying) return;
+  bgMusic.play();
+  musicPlaying = true;
+  musicBtn.classList.remove('muted');
+}
+
+function stopMusic() {
+  bgMusic.pause();
+  musicPlaying = false;
+  musicBtn.classList.add('muted');
+}
+
+musicBtn.addEventListener('click', () => {
+  musicPlaying ? stopMusic() : startMusic();
+});
+
+function playClick() {
+  try {
+    if (firstClick) {
+      firstClick = false;
+      startMusic();
+    }
+    clickAudio.currentTime = 0;
+    clickAudio.play();
+  } catch(e) {}
+}
+document.querySelectorAll('a, button, .menu-order-btn, .btn').forEach(el => {
+  el.addEventListener('click', playClick);
+});
+
+// SCROLL REVEAL ANIMATIONS
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+function observeReveal() {
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => revealObserver.observe(el));
+}
+
+// LOGO SPIN ON SCROLL
+function initLogoSpin() {
+  const logo = document.getElementById('navLogo');
+  if (!logo) return;
+  let totalScroll = 0;
+  window.addEventListener('scroll', () => {
+    totalScroll = window.pageYOffset;
+    logo.style.transform = `rotate(${totalScroll * 0.5}deg)`;
+  });
+}
+
+// PARALLAX ON SCROLL
+function initParallax() {
+  const parallaxEls = document.querySelectorAll('.parallax-bg');
+  if (parallaxEls.length === 0) return;
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const scrollY = window.pageYOffset;
+        parallaxEls.forEach(el => {
+          const rate = el.dataset.rate || 0.3;
+          el.style.transform = `translateY(${scrollY * rate}px)`;
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  observeReveal();
+  initParallax();
+  initLogoSpin();
+});
+
+// RE-OBSERVE after menu render
+const origRender = renderMenu;
+renderMenu = function(category) {
+  origRender(category);
+  observeReveal();
+};
+
+// menuData and helpers loaded from menu-data.js
+
+const menuGrid = document.getElementById('menuGrid');
+const tabs = document.querySelectorAll('.menu-tab');
+
+function renderMenu(category) {
+  const items = menuData[category] || menuData.flagship;
+  menuGrid.innerHTML = items.map(item => {
+    const slug = slugify(item.name);
+    return `
+    <a href="menu-item.html?id=${slug}" class="menu-item reveal" style="text-decoration:none;color:inherit;display:block">
+      <div class="menu-item-img" style="background-image:url('${item.img}')">
+        <span class="menu-item-tag">${item.tag}</span>
+      </div>
+      <div class="menu-item-body">
+        <h4>${item.name}</h4>
+        <p>${item.desc}</p>
+        <div class="menu-item-footer">
+          <span class="menu-price">${item.price}</span>
+          <span class="menu-order-btn"><i class="fas fa-eye"></i> View</span>
+        </div>
+      </div>
+    </a>
+  `}).join('');
+}
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderMenu(tab.dataset.category);
+  });
+});
+
+renderMenu('flagship');
+</script>
+</body>
+</html>
