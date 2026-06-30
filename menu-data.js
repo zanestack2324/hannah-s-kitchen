@@ -65,15 +65,35 @@ function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-// Load saved menu data from localStorage (admin panel changes)
-try {
-  const saved = localStorage.getItem('hannahs_menu_data');
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    for (const cat in parsed) {
-      if (Array.isArray(parsed[cat])) {
-        menuData[cat] = parsed[cat];
+// Try loading from API first, then localStorage, fall back to static data
+(async function loadMenuData() {
+  try {
+    const r = await fetch('/api/menu');
+    if (r.ok) {
+      const json = await r.json();
+      if (json.data) {
+        localStorage.setItem('hannahs_menu_data', JSON.stringify(json.data));
+        for (const cat in json.data) {
+          if (Array.isArray(json.data[cat])) {
+            menuData[cat] = json.data[cat];
+          }
+        }
+        document.dispatchEvent(new Event('menuDataLoaded'));
+        return;
       }
     }
-  }
-} catch(e) {}
+  } catch(e) {}
+  // Fall back to localStorage
+  try {
+    const saved = localStorage.getItem('hannahs_menu_data');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      for (const cat in parsed) {
+        if (Array.isArray(parsed[cat])) {
+          menuData[cat] = parsed[cat];
+        }
+      }
+    }
+  } catch(e) {}
+  document.dispatchEvent(new Event('menuDataLoaded'));
+})();

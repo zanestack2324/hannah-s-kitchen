@@ -4,6 +4,75 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hannah's Hot Pot – Online Kitchen | Akwa Ibom Roots, Global Taste</title>
+<meta name="description" content="Hannah's Hot Pot – Order authentic Akwa Ibom & Nigerian food online. Edikang Ikong, Afang Soup, Pepper Soup & more. 37+ years of legacy. Fresh, homemade, delivered hot in Lagos.">
+<meta name="keywords" content="Hannah's Hot Pot, Akwa Ibom food, Nigerian food, Edikang Ikong, Afang Soup, Calabar food, Lagos food delivery, Festac food, online kitchen, Nigerian soups">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Hannah's Hot Pot">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com https://hannahs-hot-pot.vercel.app; frame-src https://www.google.com; connect-src 'self'; form-action 'self'; base-uri 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://hannahs-hot-pot.vercel.app/">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hannahs-hot-pot.vercel.app/">
+<meta property="og:title" content="Hannah's Hot Pot – Akwa Ibom Roots, Global Taste">
+<meta property="og:description" content="Order authentic Akwa Ibom & Nigerian food online. 37+ years of legacy. Fresh, homemade, delivered hot in Lagos.">
+<meta property="og:image" content="https://hannahs-hot-pot.vercel.app/LOGO.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hannah's Hot Pot – Akwa Ibom Roots, Global Taste">
+<meta name="twitter:description" content="Order authentic Akwa Ibom & Nigerian food online. 37+ years of legacy. Fresh, homemade, delivered hot in Lagos.">
+<meta name="twitter:image" content="https://hannahs-hot-pot.vercel.app/LOGO.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Hannah's Hot Pot",
+  "alternateName": "Hannah's Hot Pot – Online Kitchen",
+  "description": "Online kitchen serving authentic Akwa Ibom and Nigerian cuisine. 37+ years of family legacy. Fresh, homemade meals delivered across Lagos.",
+  "url": "https://hannahs-hot-pot.vercel.app",
+  "telephone": "+2348160894006",
+  "email": "hannahshotpot@gmail.com",
+  "servesCuisine": ["Akwa Ibom", "Nigerian", "Calabar", "African"],
+  "priceRange": "₦500 – ₦22,000",
+  "image": "https://hannahs-hot-pot.vercel.app/LOGO.png",
+  "foundingDate": "1987",
+  "founder": { "@type": "Person", "name": "Mummy Hannah" },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Festac Town",
+    "addressRegion": "Lagos",
+    "addressCountry": "NG"
+  },
+  "areaServed": ["Festac Town", "Amuwo Odofin", "Lekki", "Victoria Island", "Ikeja"],
+  "hasMenu": {
+    "@type": "Menu",
+    "name": "Hannah's Hot Pot Menu",
+    "description": "Flagship Soups, Swallow 2.0, Pepper Soup, Proteins, Rice Meals, Calabar Specials",
+    "hasMenuSection": [
+      { "@type": "MenuSection", "name": "Flagship Soups" },
+      { "@type": "MenuSection", "name": "Swallow 2.0" },
+      { "@type": "MenuSection", "name": "Pepper Soup" },
+      { "@type": "MenuSection", "name": "Proteins" },
+      { "@type": "MenuSection", "name": "Rice Meals" },
+      { "@type": "MenuSection", "name": "Calabar Specials" }
+    ]
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "bestRating": "5",
+    "ratingCount": "128"
+  },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "08:00", "closes": "21:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "10:00", "closes": "18:00" }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -1312,6 +1381,11 @@ tabs.forEach(tab => {
 renderMenu('flagship');
 updateCartBadge();
 renderCart();
+
+// Re-render menu when dynamic data loads
+document.addEventListener('menuDataLoaded', () => {
+  renderMenu(document.querySelector('.menu-tab.active')?.dataset?.category || 'flagship');
+});
 </script>
 </body>
 </html>

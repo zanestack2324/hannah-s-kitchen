@@ -3,7 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hannah's Hot Pot – Menu Item</title>
+<title id="pageTitle">Hannah's Hot Pot – Menu Item</title>
+<meta name="description" content="View menu item details from Hannah's Hot Pot – authentic Akwa Ibom & Nigerian cuisine. Order on WhatsApp for hot delivery across Lagos.">
+<meta name="keywords" content="Hannah's Hot Pot, menu item, Akwa Ibom food, Nigerian food, Lagos food delivery">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Hannah's Hot Pot">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; base-uri 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://hannahs-hot-pot.vercel.app/menu-item.html">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hannahs-hot-pot.vercel.app/menu-item.html">
+<meta property="og:title" content="Hannah's Hot Pot – Menu">
+<meta property="og:description" content="Authentic Akwa Ibom & Nigerian cuisine. Order now for hot delivery across Lagos.">
+<meta property="og:image" content="https://hannahs-hot-pot.vercel.app/LOGO.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hannah's Hot Pot – Menu">
+<meta name="twitter:description" content="Authentic Akwa Ibom & Nigerian cuisine. Order now for hot delivery across Lagos.">
+<meta name="twitter:image" content="https://hannahs-hot-pot.vercel.app/LOGO.png">
+
+<script type="application/ld+json" id="ldJson">
+{
+  "@context": "https://schema.org",
+  "@type": "MenuItem",
+  "name": "Menu Item",
+  "offeredBy": {
+    "@type": "Restaurant",
+    "name": "Hannah's Hot Pot",
+    "url": "https://hannahs-hot-pot.vercel.app"
+  }
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -88,32 +120,59 @@ const params = new URLSearchParams(window.location.search);
 const slug = params.get('id');
 const container = document.getElementById('itemContent');
 
+function renderItem(item) {
+  document.title = item.name + ' – Hannah\'s Hot Pot';
+  const desc = item.desc.substring(0, 160);
+  document.querySelector('meta[name="description"]').content = desc;
+  document.querySelector('meta[property="og:title"]').content = item.name + ' – Hannah\'s Hot Pot';
+  document.querySelector('meta[property="og:description"]').content = desc;
+  document.querySelector('meta[name="twitter:title"]').content = item.name + ' – Hannah\'s Hot Pot';
+  document.querySelector('meta[name="twitter:description"]').content = desc;
+  document.getElementById('ldJson').textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "MenuItem",
+    "name": item.name,
+    "description": item.desc,
+    "offers": { "@type": "Offer", "price": item.price.replace(/[^0-9,]/g,''), "priceCurrency": "NGN" },
+    "image": item.img,
+    "offeredBy": { "@type": "Restaurant", "name": "Hannah's Hot Pot", "url": "https://hannahs-hot-pot.vercel.app" }
+  });
+  const waMsg = `I want to order ${item.name} (${item.price}) from Hannah's Hot Pot`;
+  container.innerHTML = `
+    <div class="item-layout">
+      <div class="item-image" style="background-image:url('${item.img}')"></div>
+      <div>
+        <span class="item-tag">${item.tag}</span>
+        <h1 class="item-name">${item.name}</h1>
+        <div class="item-price">${item.price}</div>
+        <p class="item-desc">${item.desc}</p>
+        <div class="item-actions">
+          <a href="https://wa.me/2348160894006?text=${encodeURIComponent(waMsg)}" target="_blank" class="btn btn-primary"><i class="fab fa-whatsapp"></i> Order on WhatsApp</a>
+          <a href="index.html#menu" class="btn btn-outline-dark"><i class="fas fa-arrow-left"></i> Back to Menu</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 if (!slug) {
   container.innerHTML = '<div class="not-found"><h2>No item selected</h2><p>Browse our menu to find your favourite dish.</p><a href="index.html#menu" class="btn btn-primary"><i class="fas fa-utensils"></i> View Menu</a></div>';
 } else {
   const item = getItemBySlug(slug);
   if (item) {
-    document.title = item.name + ' – Hannah\'s Hot Pot';
-    const waMsg = `I want to order ${item.name} (${item.price}) from Hannah's Hot Pot`;
-    container.innerHTML = `
-      <div class="item-layout">
-        <div class="item-image" style="background-image:url('${item.img}')"></div>
-        <div>
-          <span class="item-tag">${item.tag}</span>
-          <h1 class="item-name">${item.name}</h1>
-          <div class="item-price">${item.price}</div>
-          <p class="item-desc">${item.desc}</p>
-          <div class="item-actions">
-            <a href="https://wa.me/2348160894006?text=${encodeURIComponent(waMsg)}" target="_blank" class="btn btn-primary"><i class="fab fa-whatsapp"></i> Order on WhatsApp</a>
-            <a href="index.html#menu" class="btn btn-outline-dark"><i class="fas fa-arrow-left"></i> Back to Menu</a>
-          </div>
-        </div>
-      </div>
-    `;
+    renderItem(item);
   } else {
     container.innerHTML = '<div class="not-found"><h2>Item not found</h2><p>Sorry, we couldn\'t find that menu item.</p><a href="index.html#menu" class="btn btn-primary"><i class="fas fa-utensils"></i> View Menu</a></div>';
   }
 }
+
+// Re-check when dynamic data loads
+document.addEventListener('menuDataLoaded', () => {
+  if (slug && !container.querySelector('.item-layout')) {
+    const item = getItemBySlug(slug);
+    if (item) renderItem(item);
+  }
+});
 </script>
 </body>
 </html>

@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin – Hannah's Hot Pot</title>
+<meta name="description" content="Admin panel for Hannah's Hot Pot – manage menu items, orders, and settings.">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; base-uri 'self'">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -241,24 +244,53 @@ tr:hover td { background:#FAFAFA; }
 
 <script src="menu-data.js"></script>
 <script>
+// ===== SANITIZATION =====
+function esc(str) {
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+function sanitizeObj(obj) {
+  const out = {};
+  for (const k in obj) out[k] = typeof obj[k] === 'string' ? obj[k].replace(/<[^>]*>/g, '').trim() : obj[k];
+  return out;
+}
+
 // ===== AUTH =====
-const ADMIN_PASS_KEY = 'hannahs_admin_pass';
+const ADMIN_PASS_KEY = 'hannahs_admin_pass_hash';
+const LOGIN_KEY = 'hannahs_admin_logged';
+const LOGIN_TIME_KEY = 'hannahs_admin_time';
+const SESSION_TTL = 8 * 60 * 60 * 1000; // 8 hours
+
+function simpleHash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h |= 0; }
+  return h.toString(36);
+}
 
 function getAdminPass() {
   let p = localStorage.getItem(ADMIN_PASS_KEY);
   if (!p) {
-    p = btoa('admin123');
+    p = simpleHash('admin123');
     localStorage.setItem(ADMIN_PASS_KEY, p);
   }
-  return atob(p);
+  return p;
+}
+
+function isSessionValid() {
+  const time = parseInt(localStorage.getItem(LOGIN_TIME_KEY), 10);
+  return time && Date.now() - time < SESSION_TTL;
 }
 
 function doLogin() {
   const pass = document.getElementById('loginPass').value;
-  if (pass === getAdminPass()) {
-    localStorage.setItem('hannahs_admin_logged', '1');
+  if (simpleHash(pass) === getAdminPass()) {
+    localStorage.setItem(LOGIN_KEY, '1');
+    localStorage.setItem(LOGIN_TIME_KEY, String(Date.now()));
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').classList.add('active');
+    document.getElementById('loginPass').value = '';
     initApp();
   } else {
     const err = document.getElementById('loginError');
@@ -268,18 +300,44 @@ function doLogin() {
 }
 
 function logout() {
-  localStorage.removeItem('hannahs_admin_logged');
+  localStorage.removeItem(LOGIN_KEY);
+  localStorage.removeItem(LOGIN_TIME_KEY);
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('app').classList.remove('active');
 }
 
 // Check login on load
-if (localStorage.getItem('hannahs_admin_logged') === '1') {
+if (localStorage.getItem(LOGIN_KEY) === '1' && isSessionValid()) {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('app').classList.add('active');
+} else {
+  localStorage.removeItem(LOGIN_KEY);
+  localStorage.removeItem(LOGIN_TIME_KEY);
 }
 
-// ===== DATA LAYER =====
+// Auto-logout on visibility change (tab switch security)
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && document.getElementById('app').classList.contains('active')) {
+    setTimeout(() => {
+      if (document.hidden) logout();
+    }, 300000); // 5 min
+  }
+});
+
+// ===== API LAYER (async background sync) =====
+const API_BASE = '/api';
+
+function apiPost(endpoint, body) {
+  try {
+    fetch(API_BASE + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).catch(() => {});
+  } catch(e) {}
+}
+
+// ===== DATA LAYER (localStorage with background API sync) =====
 const STORAGE_KEY = 'hannahs_menu_data';
 const ORDERS_KEY = 'hannahs_orders';
 const SETTINGS_KEY = 'hannahs_settings';
@@ -294,6 +352,7 @@ function getMenuData() {
 
 function saveMenuData(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  apiPost('/menu', { data });
 }
 
 function getOrders() {
@@ -303,6 +362,7 @@ function getOrders() {
 
 function saveOrders(orders) {
   localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  apiPost('/orders', { data: orders });
 }
 
 function getSettings() {
@@ -313,6 +373,7 @@ function getSettings() {
 
 function saveSettings(s) {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+  apiPost('/settings', { data: s });
 }
 
 function slugify(name) {
@@ -355,6 +416,8 @@ function navigate(page) {
     case 'orders': renderOrdersPage(); break;
     case 'settings': renderSettingsPage(); break;
   }
+  // Update page functions to be async-aware
+  if (window._pendingRender) clearTimeout(window._pendingRender);
 }
 
 // ===== DASHBOARD =====
@@ -378,7 +441,7 @@ function renderDashboard() {
       <div class="table-wrap"><table>
         <thead><tr><th>Customer</th><th>Items</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
         <tbody>${orders.slice(-5).reverse().map(o => `
-          <tr><td>${o.customer}</td><td>${o.items}</td><td>${o.amount}</td><td><span class="badge badge-${o.status}">${o.status}</span></td><td>${new Date(o.date).toLocaleDateString()}</td></tr>
+          <tr><td>${esc(o.customer)}</td><td>${esc(o.items)}</td><td>${esc(o.amount)}</td><td><span class="badge badge-${o.status}">${esc(o.status)}</span></td><td>${new Date(o.date).toLocaleDateString()}</td></tr>
         `).join('')}</tbody>
       </table></div>`}
     </div>
@@ -550,11 +613,11 @@ function renderOrdersPage() {
         <tbody>${orders.map((o, i) => `
           <tr>
             <td>${i + 1}</td>
-            <td><strong>${o.customer}</strong>${o.phone ? '<br><span style="font-size:0.75rem;color:var(--text-light)">'+o.phone+'</span>' : ''}</td>
-            <td>${o.items}</td>
-            <td>${o.amount}</td>
+            <td><strong>${esc(o.customer)}</strong>${o.phone ? '<br><span style="font-size:0.75rem;color:var(--text-light)">'+esc(o.phone)+'</span>' : ''}</td>
+            <td>${esc(o.items)}</td>
+            <td>${esc(o.amount)}</td>
             <td>${new Date(o.date).toLocaleDateString()}</td>
-            <td><span class="badge badge-${o.status}">${o.status}</span></td>
+            <td><span class="badge badge-${esc(o.status)}">${esc(o.status)}</span></td>
             <td>
               <select onchange="updateOrderStatus(${i}, this.value)" style="padding:4px 8px;border-radius:6px;border:1px solid #E5E5E5;font-size:0.75rem;">
                 <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
@@ -669,9 +732,9 @@ function changePass(e) {
   e.preventDefault();
   const old = document.getElementById('oldPass').value;
   const newP = document.getElementById('newPass').value;
-  if (old !== getAdminPass()) { alert('Current password is wrong.'); return; }
+  if (simpleHash(old) !== getAdminPass()) { alert('Current password is wrong.'); return; }
   if (newP.length < 4) { alert('New password must be at least 4 characters.'); return; }
-  localStorage.setItem(ADMIN_PASS_KEY, btoa(newP));
+  localStorage.setItem(ADMIN_PASS_KEY, simpleHash(newP));
   alert('Password changed!');
   document.getElementById('oldPass').value = '';
   document.getElementById('newPass').value = '';
@@ -694,6 +757,13 @@ function openModal() { document.getElementById('modalOverlay').classList.add('op
 function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
 document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal();
+});
+
+// ===== MENU DATA LOADED EVENT =====
+document.addEventListener('menuDataLoaded', () => {
+  if (document.getElementById('app').classList.contains('active')) {
+    navigate(currentPage);
+  }
 });
 
 // ===== INIT ON LOAD =====
